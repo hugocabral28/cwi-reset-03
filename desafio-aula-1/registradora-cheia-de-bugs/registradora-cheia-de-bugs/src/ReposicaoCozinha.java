@@ -8,7 +8,7 @@ public class ReposicaoCozinha {
             ItensPorQuantidade.torta = 4;
         }
         if ("sanduiche".equals(item)) {
-            ItensPorQuantidade.sanduiche = 20;
+            ItensPorQuantidade.sanduiche += 20;
         }
     }
 }
