@@ -2,13 +2,15 @@ public class RelacaoPesoPreco {
 
     public static double retornaPrecoProduto(String item, int qtd) {
         double precoTotal = 0;
+        int fatiasDaTorta = 16;
 
         if ("pao".equals(item)) {
             precoTotal = 12.75 * (qtd * 60 / 1000);
         }
 
         if ("torta".equals(item)) {
-            precoTotal = 96.00 * (qtd / 16);
+            ItensPorQuantidade.torta = ((ItensPorQuantidade.torta * fatiasDaTorta) - qtd)/fatiasDaTorta;
+            precoTotal = (96.00 * qtd) / fatiasDaTorta;
         }
 
         if ("leite".equals(item)) {

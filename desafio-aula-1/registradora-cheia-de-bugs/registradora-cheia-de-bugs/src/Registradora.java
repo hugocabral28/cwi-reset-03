@@ -4,7 +4,7 @@ public class Registradora {
     public static void main(String[] args) {
         primeiroBug();
 
-//        segundoBug();
+        segundoBug();
 
 //        terceiroBug();
 //
@@ -23,10 +23,12 @@ public class Registradora {
                 if (!DataProjeto.cozinhaEmFuncionamento()) {
                     System.out.println("Cozinha fechada!");
                 }
+                System.out.println("Cozinha repondo item!");
                 ReposicaoCozinha.reporItem(item);
             }
 
             if ("leite".equals(item) || "cafe".equals(item)) {
+                System.out.println("Fornecedor repondo item!");
                 ReposicaoFornecedor.reporItem(item);
             }
         }

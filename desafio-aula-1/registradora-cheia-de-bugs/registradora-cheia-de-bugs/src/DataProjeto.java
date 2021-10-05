@@ -40,7 +40,7 @@ public class DataProjeto {
     }
 
     public static boolean cozinhaEmFuncionamento() {
-        boolean isHorarioFuncionamento = hora > 6 && hora <= 16;
+        boolean isHorarioFuncionamento = hora >= 6 && hora <= 16;
         boolean isMinutoFuncionamento = hora == 16 ? minuto <= 40 : minuto < 60;
 
         return diaUtil && isHorarioFuncionamento && isMinutoFuncionamento;
