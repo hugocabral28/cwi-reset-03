@@ -2,26 +2,30 @@
 public class Registradora {
 
     public static void main(String[] args) {
+        System.out.println("######## primeiroBug ########");
         primeiroBug();
-
+        System.out.println("######## segundoBug ########");
         segundoBug();
-
-//        terceiroBug();
-//
+        System.out.println("######## terceiroBug ########");
+        terceiroBug();
+//        System.out.println("######## quartoBug ########");
 //        quartoBug();
-//
+//        System.out.println("######## quintoBug ########");
 //        quintoBug();
-//
+//        System.out.println("######## sextoBug ########");
 //        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
-        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
 
         if (QuantidadeMinimaItem.precisaReposicao(item)) {
             if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
                 if (!DataProjeto.cozinhaEmFuncionamento()) {
                     System.out.println("Cozinha fechada!");
+                    int quantidadeNoEstoque = ItensPorQuantidade.retornaQuantidadeNoEstoque(item);
+                    System.out.println("A reposição da(o) " + item + " não está disponível.");
+                    System.out.println("Estoque disponível: " + quantidadeNoEstoque);
+                    System.out.println("Calculando valor do pedido de acordo com estoque disponível...");
                 }
                 System.out.println("Cozinha repondo item!");
                 ReposicaoCozinha.reporItem(item);
@@ -32,6 +36,8 @@ public class Registradora {
                 ReposicaoFornecedor.reporItem(item);
             }
         }
+
+        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
 
         return precoItem;
     }
@@ -64,6 +70,7 @@ public class Registradora {
         double precoTotal = registrarItem(item, quantidade);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal));
+        System.out.println("Total que ficou no estoque: " + ItensPorQuantidade.cafe);
     }
 
     private static void quartoBug() {

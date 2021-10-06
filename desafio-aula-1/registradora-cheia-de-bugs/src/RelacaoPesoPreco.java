@@ -9,7 +9,7 @@ public class RelacaoPesoPreco {
         }
 
         if ("torta".equals(item)) {
-            ItensPorQuantidade.torta = ((ItensPorQuantidade.torta * fatiasDaTorta) - qtd)/fatiasDaTorta;
+            ItensPorQuantidade.torta -= qtd;
             precoTotal = (96.00 * qtd) / fatiasDaTorta;
         }
 
@@ -17,7 +17,11 @@ public class RelacaoPesoPreco {
             precoTotal = 4.48 * qtd;
         }
 
-        if ("café".equals(item)) {
+        if ("cafe".equals(item)) {
+            while(ItensPorQuantidade.cafe<=qtd){
+                ReposicaoFornecedor.reporItem(item);
+            }
+            ItensPorQuantidade.cafe -= qtd;
             precoTotal = 9.56 * qtd;
         }
 
@@ -28,4 +32,5 @@ public class RelacaoPesoPreco {
 
         return precoTotal;
     }
+
 }
