@@ -6,7 +6,7 @@ public class RelacaoPesoPreco {
 
         if ("pao".equals(item)) {
             ItensPorQuantidade.retiraDoEstoque(item, qtd);
-            precoTotal = 12.75 * (qtd * 60 / 1000);
+            precoTotal = 12.75 * (qtd * 60) / 1000;
         }
 
         if ("torta".equals(item)) {

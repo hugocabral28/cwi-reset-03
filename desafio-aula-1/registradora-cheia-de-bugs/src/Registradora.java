@@ -10,14 +10,15 @@ public class Registradora {
         terceiroBug();
         System.out.println("######## quartoBug ########");
         quartoBug();
-//        System.out.println("######## quintoBug ########");
-//        quintoBug();
+        System.out.println("######## quintoBug ########");
+        quintoBug();
 //        System.out.println("######## sextoBug ########");
 //        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
         int quantidadeNoEstoque = ItensPorQuantidade.retornaQuantidadeNoEstoque(item);
+
         if(quantidadeNoEstoque < quantidade){
             if ("leite".equals(item) || "cafe".equals(item)) {
                 System.out.println("Fornecedor repondo item!");

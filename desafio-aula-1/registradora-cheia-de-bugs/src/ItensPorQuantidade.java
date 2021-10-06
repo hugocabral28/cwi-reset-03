@@ -34,7 +34,7 @@ public class ItensPorQuantidade {
     public static void retiraDoEstoque(String item, int quantidadeItem){
         int retiraItem = 0;
         if ("pao".equals(item)) {
-            retiraItem = getPao() - quantidadeItem;
+            retiraItem = getPao() - (quantidadeItem * 60);
             ItensPorQuantidade.setPao(retiraItem);
         }
 
