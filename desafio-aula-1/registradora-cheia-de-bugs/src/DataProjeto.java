@@ -45,4 +45,8 @@ public class DataProjeto {
 
         return diaUtil && isHorarioFuncionamento && isMinutoFuncionamento;
     }
+
+    public static boolean isDiaUtil() {
+        return diaUtil;
+    }
 }
