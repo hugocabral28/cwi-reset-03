@@ -13,7 +13,7 @@ public class Diretor {
     public void imprimarDados(){
         System.out.println("Nome: "+ getNome());
         System.out.println("Idade: "+ getIdade());
-        System.out.println("Gênero: " + genero);
+        System.out.println("Gênero: " + genero.getDescricao());
     }
 
     public String getNome() {
