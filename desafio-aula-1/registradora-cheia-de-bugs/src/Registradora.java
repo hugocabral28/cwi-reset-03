@@ -105,7 +105,7 @@ public class Registradora {
         double precoTotal2 = registrarItem(item2, quantidade2);
 
         System.out.println(String.format("Valor total: %.2f", precoTotal2));
-       
+
     }
 
     private static void quintoBug() {
