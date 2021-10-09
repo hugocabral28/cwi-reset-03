@@ -1,24 +1,27 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Filme {
     private String nome;
     private String descricao;
-    private double duracaoMinuto;
+    private Integer duracao;
     private int anoLancamento;
     private int avaliacao;
-    private int idDiretor;
+    private Diretor diretor;
 
-    public Filme(String nome, String descricao, double duracaoMinuto, int anoLancamento, int avaliacao, int idDiretor) {
+    public Filme(String nome, String descricao, Integer duracaoMinuto, int anoLancamento, int avaliacao, Diretor diretor) {
         this.nome = nome;
         this.descricao = descricao;
-        this.duracaoMinuto = duracaoMinuto;
+        this.duracao = duracaoMinuto;
         this.anoLancamento = anoLancamento;
         this.avaliacao = avaliacao;
-        this.idDiretor = idDiretor;
+        this.diretor = diretor;
     }
     public void reproduzirFilme(){
         System.out.println("Nome do Filme: " + getNome());
         System.out.println("Descrição: " + getDescricao());
-        System.out.println("Duração em Minutos: " + getDuracaoMinuto());
-        System.out.println("Nome do Diretor: " + getIdDiretor());
+        System.out.println("Duração em Minutos: " + getDuracao());
+        System.out.println("Nome do Diretor: " + diretor.getNome());
     }
 
     public String getNome() {
@@ -37,12 +40,12 @@ public class Filme {
         this.descricao = descricao;
     }
 
-    public double getDuracaoMinuto() {
-        return duracaoMinuto;
+    public double getDuracao() {
+        return duracao;
     }
 
-    public void setDuracaoMinuto(double duracaoMinuto) {
-        this.duracaoMinuto = duracaoMinuto;
+    public void setDuracao(Integer duracao) {
+        this.duracao = duracao;
     }
 
     public int getAnoLancamento() {
@@ -59,14 +62,6 @@ public class Filme {
 
     public void setAvaliacao(int avaliacao) {
         this.avaliacao = avaliacao;
-    }
-
-    public int getIdDiretor() {
-        return idDiretor;
-    }
-
-    public void setIdDiretor(int idDiretor) {
-        this.idDiretor = idDiretor;
     }
 }
 

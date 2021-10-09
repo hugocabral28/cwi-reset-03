@@ -1,22 +1,12 @@
 public class Diretor {
-    private int idDiretor;
     private String nome;
     private int idade;
     private int quantidadeFilmes;
 
-    public Diretor(int idDiretor, String nome, int idade, int quantidadeFilmes) {
-        this.idDiretor = idDiretor;
+    public Diretor(String nome, int idade, int quantidadeFilmes) {
         this.nome = nome;
         this.idade = idade;
         this.quantidadeFilmes = quantidadeFilmes;
-    }
-
-    public int getIdDiretor() {
-        return idDiretor;
-    }
-
-    public void setIdDiretor(int idDiretor) {
-        this.idDiretor = idDiretor;
     }
 
     public String getNome() {
