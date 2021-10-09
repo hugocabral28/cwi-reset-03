@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+package appFilmes;
 
 public class Filme {
     private String nome;
@@ -18,10 +17,10 @@ public class Filme {
         this.diretor = diretor;
     }
     public void reproduzirFilme(){
-        System.out.println("Nome do Filme: " + getNome());
+        System.out.println("Nome do appFilmes.Filme: " + getNome());
         System.out.println("Descrição: " + getDescricao());
         System.out.println("Duração em Minutos: " + getDuracao());
-        System.out.println("Nome do Diretor: " + diretor.getNome());
+        System.out.println("Nome do appFilmes.Diretor: " + diretor.getNome());
     }
 
     public String getNome() {
