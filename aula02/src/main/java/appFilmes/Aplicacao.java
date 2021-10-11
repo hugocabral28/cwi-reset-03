@@ -1,18 +1,35 @@
 package appFilmes;
 
-public class Aplicacao {
-    public static void main(String[] args){
-        Diretor diretor1 =new Diretor("Diretor1",39,2,Genero.FEMININO);
-        Ator ator = new Ator("Ator 1",32,3,Genero.MASCULINO);
+import java.time.LocalDate;
 
-        Filme filme1 = new Filme("Nome do filme","Terro",190,2019,5,diretor1);
-        Filme filme2 = new Filme("Nome do filme2","Aventura",182,2020,4,diretor1);
+
+public class Aplicacao {
+    public static void main(String[] args) throws Exception {
+        Diretor diretor =new Diretor("Diretor",LocalDate.of(1965, 05, 18), 2, Genero.FEMININO);
+        Ator ator = new Ator("Ator",LocalDate.of(1985, 10, 28),3,Genero.MASCULINO);
+
+        Filme filme1 = new Filme(
+                "Venom",
+                "O jornalista Eddie Brock desenvolve força e poder sobre-humanos. quando",
+                190,
+                2018,
+                4.5,
+                diretor
+        );
+        Filme filme2 = new Filme(
+                "Infiltrado","Um homem misterioso que trabalha para uma empresa de carros-fortes.",
+                182,
+                2021,
+                4.2,
+                diretor
+        );
 
         filme1.reproduzirFilme();
         System.out.println("______________");
         filme2.reproduzirFilme();
         System.out.println("______________");
-        diretor1.imprimarDados();
+        diretor.imprimarDados();
+        System.out.println("______________");
         ator.imprimarDados();
 
     }

@@ -1,12 +1,14 @@
 package appFilmes;
 
+import java.time.LocalDate;
+
 public class Diretor extends Pessoa{
 
     private int quantidadeFilmes;
 
 
-    public Diretor(String nome, int idade, int quantidadeFilmes , Genero genero) {
-        super(nome = nome,idade = idade, genero = genero);
+    public Diretor(String nome, LocalDate dataNascimento, int quantidadeFilmes, Genero genero) {
+        super(nome, dataNascimento, genero);
         this.quantidadeFilmes = quantidadeFilmes;
     }
 

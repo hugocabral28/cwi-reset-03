@@ -1,31 +1,30 @@
 package appFilmes;
 
-public class Pessoa {
+import java.time.LocalDate;
+import java.time.Period;
+
+public abstract class Pessoa {
     private String nome;
-    private int idade;
+    private LocalDate dataNascimento;
     private Genero genero;
 
-    public Pessoa(String nome, int idade , Genero genero) {
+    public Pessoa(String nome, LocalDate dataNascimento , Genero genero) {
         this.nome = nome;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
         this.genero = genero;
     }
 
     public void imprimarDados(){
         System.out.println("Nome: "+ getNome());
-        System.out.println("Idade: "+ getIdade());
+        System.out.println("Idade: "+ this.calcularIdade());
         System.out.println("Gênero: " + genero.getDescricao());
+    }
+
+    public int calcularIdade(){
+        return Period.between(dataNascimento,LocalDate.now()).getYears();
     }
 
     public String getNome() {
         return nome;
-    }
-
-    public int getIdade() {
-        return idade;
-    }
-
-    public Genero getGenero() {
-        return genero;
     }
 }

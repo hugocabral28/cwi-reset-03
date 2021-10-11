@@ -5,22 +5,27 @@ public class Filme {
     private String descricao;
     private Integer duracao;
     private int anoLancamento;
-    private int avaliacao;
+    private double avaliacao;
     private Diretor diretor;
 
-    public Filme(String nome, String descricao, Integer duracaoMinuto, int anoLancamento, int avaliacao, Diretor diretor) {
+    public Filme(String nome, String descricao, Integer duracaoMinuto, int anoLancamento, double avaliacao, Diretor diretor) throws AvaliacaoForaDoPadraoException {
+        if (avaliacao < 1 || avaliacao > 5) {
+            throw new AvaliacaoForaDoPadraoException();
+        }
         this.nome = nome;
         this.descricao = descricao;
         this.duracao = duracaoMinuto;
         this.anoLancamento = anoLancamento;
         this.avaliacao = avaliacao;
         this.diretor = diretor;
+
     }
+
     public void reproduzirFilme(){
-        System.out.println("Nome do appFilmes.Filme: " + getNome());
+        System.out.println("Nome do Filme: " + getNome());
         System.out.println("Descrição: " + getDescricao());
         System.out.println("Duração em Minutos: " + getDuracao());
-        System.out.println("Nome do appFilmes.Diretor: " + diretor.getNome());
+        System.out.println("Nome do Diretor: " + diretor.getNome());
     }
 
     public String getNome() {
@@ -55,11 +60,11 @@ public class Filme {
         this.anoLancamento = anoLancamento;
     }
 
-    public int getAvaliacao() {
+    public double getAvaliacao() {
         return avaliacao;
     }
 
-    public void setAvaliacao(int avaliacao) {
+    public void setAvaliacao(double avaliacao) {
         this.avaliacao = avaliacao;
     }
 }
