@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 
 public class Ator extends Pessoa {
+    public final static String CAMPO_STATUS_CARREIRA = "Status da Carreira";
+
     private int id;
     private StatusCarreira statusCarreira;
 
@@ -18,5 +20,9 @@ public class Ator extends Pessoa {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public StatusCarreira getStatusCarreira() {
+        return statusCarreira;
     }
 }

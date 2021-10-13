@@ -2,6 +2,7 @@ package br.com.cwi.reset.hugocabral;
 
 import br.com.cwi.reset.hugocabral.domain.Ator;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
+import br.com.cwi.reset.hugocabral.exception.ExceptionCampoInvalido;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.service.AtorService;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class Aplicacao {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         FakeDatabase fakeDatabase = new FakeDatabase();
         AtorService atorService = new AtorService(fakeDatabase);
 
@@ -23,11 +24,26 @@ public class Aplicacao {
         AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
         atorService.criarAtor(atorRequest);
 
-         List<Ator> atores = fakeDatabase.recuperaAtores();
+        AtorRequest atorRequest2 = new AtorRequest(
+                "",
+                dataNascimento,
+                null,
+                anoInicioAtividade);
+
+        try {
+            atorService.criarAtor(atorRequest2);
+        } catch (ExceptionCampoInvalido e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        List<Ator> atores = fakeDatabase.recuperaAtores();
 
         System.out.println("Deve conter 1 ator, quantidade encontrada: " + atores.size());
         System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
         System.out.println("Primeiro ator deve ser id '1', valor encontrado: " + atores.get(0).getId());
 
+        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(1).getNome());
+        System.out.println("Primeiro ator deve ser id '2', valor encontrado: " + atores.get(1).getId());
     }
 }
