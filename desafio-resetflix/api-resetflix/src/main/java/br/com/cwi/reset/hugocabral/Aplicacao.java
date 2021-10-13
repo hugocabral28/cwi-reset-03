@@ -2,7 +2,6 @@ package br.com.cwi.reset.hugocabral;
 
 import br.com.cwi.reset.hugocabral.domain.Ator;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
-import br.com.cwi.reset.hugocabral.exception.ExceptionCampoInvalido;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.service.AtorService;
 
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class Aplicacao {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         FakeDatabase fakeDatabase = new FakeDatabase();
         AtorService atorService = new AtorService(fakeDatabase);
 
@@ -26,7 +25,7 @@ public class Aplicacao {
 
         AtorRequest atorRequest2 = new AtorRequest(
                 "Will SMITH",
-                LocalDate.of(2022, Month.SEPTEMBER, 25),
+                LocalDate.of(1987, Month.SEPTEMBER, 25),
                 statusCarreira,
                 anoInicioAtividade);
 
