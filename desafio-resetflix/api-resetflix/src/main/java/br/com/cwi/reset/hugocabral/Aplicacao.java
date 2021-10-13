@@ -24,8 +24,8 @@ public class Aplicacao {
         atorService.criarAtor(atorRequest);
 
         AtorRequest atorRequest2 = new AtorRequest(
-                "Will SMITH",
-                LocalDate.of(1987, Month.SEPTEMBER, 25),
+                "Will Smith",
+                LocalDate.of(1968, Month.SEPTEMBER, 25),
                 statusCarreira,
                 anoInicioAtividade);
 

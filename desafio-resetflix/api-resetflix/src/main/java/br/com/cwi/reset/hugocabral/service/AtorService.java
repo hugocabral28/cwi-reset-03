@@ -2,11 +2,9 @@ package br.com.cwi.reset.hugocabral.service;
 
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
+import br.com.cwi.reset.hugocabral.domain.Ator;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
-import br.com.cwi.reset.hugocabral.exception.ExceptionAnoInicioAtividade;
-import br.com.cwi.reset.hugocabral.exception.ExceptionCampoInvalido;
-import br.com.cwi.reset.hugocabral.exception.ExceptionDataDeNascimento;
-import br.com.cwi.reset.hugocabral.exception.ExceptionNomeESobrenome;
+import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 
 import java.time.LocalDate;
@@ -29,6 +27,7 @@ public class AtorService {
             validaNomeESobrenome(atorRequest);
             validaDataNascimento(atorRequest);
             validaAnoInicioAtividade(atorRequest);
+            validaDuplicidadeCadastro(atorRequest);
 
             atorRequest.setId(gerarIdAtor());
             fakeDatabase.persisteAtor(atorRequest);
@@ -49,6 +48,10 @@ public class AtorService {
         catch (ExceptionAnoInicioAtividade e) {
             e.printStackTrace();
         }
+        //Caso ExceptionCadastroDuplicado
+        catch (ExceptionCadastroDuplicado e) {
+            e.printStackTrace();
+        }
     }
 
     // Demais métodos da classe
@@ -57,7 +60,7 @@ public class AtorService {
     }
 
     private void validaCamposObrigatorios(AtorRequest atorRequest) throws ExceptionCampoInvalido {
-        List<String> campo = new ArrayList<String>();
+        List<String> campo = new ArrayList();
         boolean campoNulo = false;
 
         String nome = atorRequest.getNome();
@@ -115,5 +118,14 @@ public class AtorService {
         }
     }
 
+    private void validaDuplicidadeCadastro(AtorRequest atorRequest) throws ExceptionCadastroDuplicado {
+        String nomeDoAtor = atorRequest.getNome();
+        List<Ator> atores = fakeDatabase.recuperaAtores();
+        for (Ator ator : atores) {
+            if (ator.getNome().equals(nomeDoAtor)) {
+                throw new ExceptionCadastroDuplicado(atorOuAtriz,nomeDoAtor);
+            }
+        }
+    }
 
 }
