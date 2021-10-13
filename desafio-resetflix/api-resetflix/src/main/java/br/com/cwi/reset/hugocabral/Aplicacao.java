@@ -27,15 +27,10 @@ public class Aplicacao {
         AtorRequest atorRequest2 = new AtorRequest(
                 "",
                 dataNascimento,
-                null,
+                statusCarreira,
                 anoInicioAtividade);
 
-        try {
             atorService.criarAtor(atorRequest2);
-        } catch (ExceptionCampoInvalido e) {
-            System.out.println(e.getMessage());
-        }
-
 
         List<Ator> atores = fakeDatabase.recuperaAtores();
 

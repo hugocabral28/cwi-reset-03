@@ -4,6 +4,7 @@ package br.com.cwi.reset.hugocabral.service;
 import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
 import br.com.cwi.reset.hugocabral.exception.ExceptionCampoInvalido;
+import br.com.cwi.reset.hugocabral.exception.ExceptionNomeESobrenome;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 
 import java.time.LocalDate;
@@ -19,10 +20,19 @@ public class AtorService {
         this.fakeDatabase = fakeDatabase;
     }
 
-    public void criarAtor(AtorRequest atorRequest) throws ExceptionCampoInvalido {
-        validaCamposObrigatorios(atorRequest);
-        atorRequest.setId(gerarIdAtor());
-        fakeDatabase.persisteAtor(atorRequest);
+    public void criarAtor(AtorRequest atorRequest){
+        try {
+            validaCamposObrigatorios(atorRequest);
+            validaNomeESobrenome(atorRequest);
+
+            atorRequest.setId(gerarIdAtor());
+            fakeDatabase.persisteAtor(atorRequest);
+        } catch (ExceptionCampoInvalido e){
+            e.printStackTrace();
+        }
+         catch (ExceptionNomeESobrenome e) {
+             e.printStackTrace();
+         }
     }
 
     // Demais métodos da classe
@@ -61,6 +71,14 @@ public class AtorService {
         //Os campos que for null active o ExceptionCampoInvalido
         if (campoNulo) {
             throw new ExceptionCampoInvalido(campo);
+        }
+    }
+
+    private void validaNomeESobrenome(AtorRequest atorRequest) throws ExceptionNomeESobrenome {
+        String[] nomeSobrenome = atorRequest.getNome().split(" ");
+        if(nomeSobrenome.length < 2){
+            String nome = "Ator ou Atriz";
+            throw new ExceptionNomeESobrenome(nome);
         }
     }
 }
