@@ -1,5 +1,8 @@
 package br.com.cwi.reset.hugocabral;
 
+import br.com.cwi.reset.hugocabral.domain.Ator;
+import br.com.cwi.reset.hugocabral.domain.Diretor;
+
 import java.util.ArrayList;
 import java.util.List;
 
