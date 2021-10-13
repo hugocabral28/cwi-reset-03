@@ -21,3 +21,5 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+# Pastas personalizadas
+desafio-resetflix/api-resetflix/src/main/java/br/com/cwi/reset/hugocabral/teste
