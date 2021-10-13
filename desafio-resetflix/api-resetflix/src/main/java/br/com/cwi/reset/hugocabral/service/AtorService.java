@@ -4,6 +4,7 @@ package br.com.cwi.reset.hugocabral.service;
 import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
 import br.com.cwi.reset.hugocabral.exception.ExceptionCampoInvalido;
+import br.com.cwi.reset.hugocabral.exception.ExceptionDataDeNascimento;
 import br.com.cwi.reset.hugocabral.exception.ExceptionNomeESobrenome;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 
@@ -24,6 +25,7 @@ public class AtorService {
         try {
             validaCamposObrigatorios(atorRequest);
             validaNomeESobrenome(atorRequest);
+            validaDataNascimento(atorRequest);
 
             atorRequest.setId(gerarIdAtor());
             fakeDatabase.persisteAtor(atorRequest);
@@ -33,6 +35,9 @@ public class AtorService {
          catch (ExceptionNomeESobrenome e) {
              e.printStackTrace();
          }
+        catch (ExceptionDataDeNascimento e) {
+            e.printStackTrace();
+        }
     }
 
     // Demais métodos da classe
@@ -81,4 +86,16 @@ public class AtorService {
             throw new ExceptionNomeESobrenome(nome);
         }
     }
+
+    private void validaDataNascimento(AtorRequest atorRequest) throws ExceptionDataDeNascimento {
+        Integer anoAtual = LocalDate.now().getYear();
+        Integer anoNascimento = atorRequest.getDataNascimento().getYear();
+
+        if(anoNascimento > anoAtual){
+            String nome = "Ator ou Atriz";
+            throw new ExceptionDataDeNascimento(nome);
+        }
+    }
+
+
 }
