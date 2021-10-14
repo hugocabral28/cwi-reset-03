@@ -10,6 +10,7 @@ import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AtorService {
     private final String atorOuAtriz = "Ator ou Atriz";
@@ -23,13 +24,13 @@ public class AtorService {
 
     public void criarAtor(AtorRequest atorRequest) {
         try {
+            atorRequest.setId(gerarIdAtor());
             validaCamposObrigatorios(atorRequest);
             validaNomeESobrenome(atorRequest);
             validaDataNascimento(atorRequest);
             validaAnoInicioAtividade(atorRequest);
             validaDuplicidadeCadastro(atorRequest);
 
-            atorRequest.setId(gerarIdAtor());
             fakeDatabase.persisteAtor(atorRequest);
 
         }//Caso ExceptionCampoInvalido
@@ -55,6 +56,28 @@ public class AtorService {
     }
 
     // Demais métodos da classe
+    public Optional<Ator> consultarAtor(Integer id)throws ExceptionIdObrigatorio{
+
+        if(id == null){
+            throw new ExceptionIdObrigatorio("id");
+        }
+
+        Optional<Ator> atorEncontrado = fakeDatabase.buscarAtorPorId(id);
+
+        if(!atorEncontrado.isPresent()){
+            throw new ExceptionIdObrigatorio("id");
+        }
+
+        return atorEncontrado;
+    }
+    public List<Ator> consultarAtores() throws ExceptionSemCadastro {
+        List<Ator> list = fakeDatabase.recuperaAtores();
+        if(list.isEmpty()){
+            throw new ExceptionSemCadastro("Ator");
+        }
+        return list;
+    }
+
     private Integer gerarIdAtor() {
         return ++sequenceIdAtor;
     }
@@ -127,5 +150,4 @@ public class AtorService {
             }
         }
     }
-
 }

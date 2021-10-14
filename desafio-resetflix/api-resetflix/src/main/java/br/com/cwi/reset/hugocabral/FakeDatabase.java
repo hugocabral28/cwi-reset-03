@@ -5,6 +5,7 @@ import br.com.cwi.reset.hugocabral.domain.Diretor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FakeDatabase {
 
@@ -17,6 +18,13 @@ public class FakeDatabase {
 
     public List<Ator> recuperaAtores() {
         return atores;
+    }
+
+    public Optional<Ator> buscarAtorPorId(Integer id) {
+        Optional<Ator> first = atores.stream()
+                .filter(ator -> id.equals(ator.getId()))
+                .findFirst();
+        return first;
     }
 
     public void persisteDiretor(Diretor diretor) {

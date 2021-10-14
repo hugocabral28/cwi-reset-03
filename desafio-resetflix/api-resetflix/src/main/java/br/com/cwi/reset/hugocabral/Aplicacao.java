@@ -1,21 +1,15 @@
 package br.com.cwi.reset.hugocabral;
 
-import br.com.cwi.reset.hugocabral.domain.Ator;
-import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
-import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.service.AtorService;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.List;
+import br.com.cwi.reset.hugocabral.teste.ator.TestAtor;
 
 public class Aplicacao {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         FakeDatabase fakeDatabase = new FakeDatabase();
         AtorService atorService = new AtorService(fakeDatabase);
 
-        String nome = "Will Smith";
+        /*String nome = "Will Smith";
         LocalDate dataNascimento = LocalDate.of(1968, Month.SEPTEMBER, 25);
         StatusCarreira statusCarreira = StatusCarreira.EM_ATIVIDADE;
         Integer anoInicioAtividade = 1986;
@@ -24,7 +18,7 @@ public class Aplicacao {
         atorService.criarAtor(atorRequest);
 
         AtorRequest atorRequest2 = new AtorRequest(
-                "Will Smith",
+                "Will Smit",
                 LocalDate.of(1968, Month.SEPTEMBER, 25),
                 statusCarreira,
                 anoInicioAtividade);
@@ -38,6 +32,15 @@ public class Aplicacao {
         System.out.println("Primeiro ator deve ser id '1', valor encontrado: " + atores.get(0).getId());
 
         System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(1).getNome());
-        System.out.println("Primeiro ator deve ser id '2', valor encontrado: " + atores.get(1).getId());
+        System.out.println("Primeiro ator deve ser id '2', valor encontrado: " + atores.get(1).getId());*/
+
+
+        /*####### Testes Consultar Ator #######*/
+        TestAtor.cadastraDados();
+        TestAtor.testConsultarAtorId();
+        TestAtor.buscarTodosAtores();
+        /*####### Testes Consultar Diretor #######*/
+
+
     }
 }
