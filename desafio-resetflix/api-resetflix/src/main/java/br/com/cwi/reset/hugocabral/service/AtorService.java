@@ -3,6 +3,7 @@ package br.com.cwi.reset.hugocabral.service;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.domain.Ator;
+import br.com.cwi.reset.hugocabral.domain.AtorEmAtividade;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
 import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AtorService {
     private final String atorOuAtriz = "Ator ou Atriz";
@@ -56,9 +58,37 @@ public class AtorService {
     }
 
     // Demais métodos da classe
-    public Optional<Ator> consultarAtor(Integer id)throws ExceptionIdObrigatorio{
+    public List<AtorEmAtividade> listarAtoresEmAtividade(Optional<String> filtroNome) throws ExceptionFiltroNome {
+        List<Ator> atores = fakeDatabase.recuperaAtores();
 
-        if(id == null){
+        StatusCarreira statusEmAtividade = StatusCarreira.EM_ATIVIDADE;
+        boolean filtroComNome = filtroNome.isPresent();
+        String[] nome = {};
+
+        if (filtroComNome) {
+            //Caso tenha espaços em brancos remove do inicio e final
+            nome = filtroNome.toString().trim().split(" ");
+        }
+        //Caso tenha filtroNome filtrar ator pelo Nome
+        List<AtorEmAtividade> atoresFiltrados = atores.stream()
+                .filter(ator -> filtroComNome ? ator.getNome().contains(filtroNome.get()) : true)
+                .filter(ator -> ator.getStatusCarreira().equals(statusEmAtividade))
+                .map(ator -> new AtorEmAtividade(ator.getId(), ator.getNome(), ator.getDataNascimento()))
+                .collect(Collectors.toList());
+
+
+        if (atoresFiltrados.isEmpty()) {
+            String filtro = filtroNome.map(Object::toString).orElse(null);
+            throw new ExceptionFiltroNome("Ator", filtro);
+        }
+
+        return atoresFiltrados;
+
+    }
+
+    public Optional<Ator> consultarAtor(Integer id) throws ExceptionIdObrigatorio {
+
+        if (id == null) {
             throw new ExceptionIdObrigatorio("id");
         }
 
@@ -68,15 +98,16 @@ public class AtorService {
                 .filter(ator -> id.equals(ator.getId()))
                 .findFirst();
 
-        if(!atorEncontrado.isPresent()){
+        if (!atorEncontrado.isPresent()) {
             throw new ExceptionIdObrigatorio("id");
         }
 
         return atorEncontrado;
     }
+
     public List<Ator> consultarAtores() throws ExceptionSemCadastro {
         List<Ator> list = fakeDatabase.recuperaAtores();
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             throw new ExceptionSemCadastro("Ator");
         }
         return list;
@@ -150,7 +181,7 @@ public class AtorService {
         List<Ator> atores = fakeDatabase.recuperaAtores();
         for (Ator ator : atores) {
             if (ator.getNome().equals(nomeDoAtor)) {
-                throw new ExceptionCadastroDuplicado(atorOuAtriz,nomeDoAtor);
+                throw new ExceptionCadastroDuplicado(atorOuAtriz, nomeDoAtor);
             }
         }
     }

@@ -37,8 +37,9 @@ public class Aplicacao {
 
         /*####### Testes Consultar Ator #######*/
         TestAtor.cadastraDados();
-        TestAtor.testConsultarAtorId();
-        TestAtor.buscarTodosAtores();
+//        TestAtor.testConsultarAtorId();
+//        TestAtor.buscarTodosAtores();
+        TestAtor.listarAtoresComFiltro();
         /*####### Testes Consultar Diretor #######*/
 
 
