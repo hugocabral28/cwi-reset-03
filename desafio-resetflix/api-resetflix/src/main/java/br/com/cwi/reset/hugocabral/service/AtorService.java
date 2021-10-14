@@ -62,7 +62,11 @@ public class AtorService {
             throw new ExceptionIdObrigatorio("id");
         }
 
-        Optional<Ator> atorEncontrado = fakeDatabase.buscarAtorPorId(id);
+        List<Ator> atores = fakeDatabase.recuperaAtores();
+        //filtrando ator pelo id
+        Optional<Ator> atorEncontrado = atores.stream()
+                .filter(ator -> id.equals(ator.getId()))
+                .findFirst();
 
         if(!atorEncontrado.isPresent()){
             throw new ExceptionIdObrigatorio("id");
