@@ -8,8 +8,10 @@ public class Filme {
     private double avaliacao;
     private Diretor diretor;
 
-    public Filme(String nome, String descricao, Integer duracaoMinuto, int anoLancamento, double avaliacao, Diretor diretor){
-
+    public Filme(String nome, String descricao, Integer duracaoMinuto, int anoLancamento, double avaliacao, Diretor diretor) throws AvaliacaoForaDoPadraoException {
+        if (avaliacao < 1 || avaliacao > 5) {
+            throw new AvaliacaoForaDoPadraoException();
+        }
         this.nome = nome;
         this.descricao = descricao;
         this.duracao = duracaoMinuto;
@@ -18,29 +20,52 @@ public class Filme {
         this.diretor = diretor;
 
     }
+
     public String getNome() {
         return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescricao() {
         return descricao;
     }
 
-    public double getDuracao() {
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Integer getDuracao() {
         return duracao;
+    }
+
+    public void setDuracao(Integer duracao) {
+        this.duracao = duracao;
     }
 
     public int getAnoLancamento() {
         return anoLancamento;
     }
 
+    public void setAnoLancamento(int anoLancamento) {
+        this.anoLancamento = anoLancamento;
+    }
+
     public double getAvaliacao() {
         return avaliacao;
     }
 
-    public Diretor getDiretor(){
+    public void setAvaliacao(double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public Diretor getDiretor() {
         return diretor;
     }
 
-
+    public void setDiretor(Diretor diretor) {
+        this.diretor = diretor;
+    }
 }
