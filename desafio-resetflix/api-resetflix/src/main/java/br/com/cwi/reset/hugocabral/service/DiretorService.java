@@ -1,19 +1,17 @@
 package br.com.cwi.reset.hugocabral.service;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
+import br.com.cwi.reset.hugocabral.domain.Constantes;
 import br.com.cwi.reset.hugocabral.domain.Diretor;
 import br.com.cwi.reset.hugocabral.exception.*;
-import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 public class DiretorService {
-    private final String diretorOuDiretora = "Diretor ou Diretora";
 
     private FakeDatabase fakeDatabase;
     private Integer sequenceIdDiretor = 0;
@@ -24,14 +22,14 @@ public class DiretorService {
 
     public void cadastrarDiretor(DiretorRequest diretorRequest) {
         try {
-            diretorRequest.setId(gerarIdAtor());
             validaCamposObrigatorios(diretorRequest);
             validaNomeESobrenome(diretorRequest);
             validaDataNascimento(diretorRequest);
             validaAnoInicioAtividade(diretorRequest);
             validaDuplicidadeCadastro(diretorRequest);
-
-            fakeDatabase.persisteDiretor(diretorRequest);
+            sequenceIdDiretor = gerarIdAtor();
+            final Diretor diretor = new Diretor(sequenceIdDiretor, diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
+            fakeDatabase.persisteDiretor(diretor);
 
         }//Caso ExceptionCampoInvalido
         catch (ExceptionCampoInvalido e) {
@@ -78,7 +76,7 @@ public class DiretorService {
     public List<Diretor> consultarDiretor() throws ExceptionSemCadastro {
         List<Diretor> list = fakeDatabase.recuperaDiretores();
         if (list.isEmpty()) {
-            throw new ExceptionSemCadastro("Diretor");
+            throw new ExceptionSemCadastro(TipoDominioException.DIRETOR.getSingular(),TipoDominioException.DIRETOR.getPlural());
         }
         return list;
     }
@@ -88,37 +86,28 @@ public class DiretorService {
     }
 
     private void validaCamposObrigatorios(DiretorRequest diretorRequest) throws ExceptionCampoInvalido {
-        List<String> campo = new ArrayList();
-        boolean campoNulo = false;
 
         String nome = diretorRequest.getNome();
         if (nome == null || nome.equals("")) {
-            campo.add(diretorRequest.CAMPO_NOME);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_NOME);
         }
 
         LocalDate dataNascimento = diretorRequest.getDataNascimento();
         if (dataNascimento == null) {
-            campo.add(AtorRequest.CAMPO_DATA_NASCIMENTO);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_DATA_NASCIMENTO);
         }
 
         Integer anoInicioAtividade = diretorRequest.getAnoInicioAtividade();
         if (anoInicioAtividade == null) {
-            campo.add(diretorRequest.CAMPO_ANO_INICIO_ATIVIDADE);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_ANO_INICIO_ATIVIDADE);
         }
 
-        //Os campos que for null active o ExceptionCampoInvalido
-        if (campoNulo) {
-            throw new ExceptionCampoInvalido(campo);
-        }
     }
 
     private void validaNomeESobrenome(DiretorRequest diretorRequest) throws ExceptionNomeESobrenome {
         String[] nomeSobrenome = diretorRequest.getNome().trim().split(" ");
         if (nomeSobrenome.length < 2) {
-            throw new ExceptionNomeESobrenome(diretorOuDiretora);
+            throw new ExceptionNomeESobrenome(TipoDominioException.DIRETOR.getSingular());
         }
     }
 
@@ -127,7 +116,7 @@ public class DiretorService {
         Integer anoNascimento = diretorRequest.getDataNascimento().getYear();
 
         if (anoNascimento > anoAtual) {
-            throw new ExceptionDataDeNascimento(diretorOuDiretora);
+            throw new ExceptionDataDeNascimento(TipoDominioException.DIRETOR.getSingular());
         }
     }
 
@@ -136,7 +125,7 @@ public class DiretorService {
         Integer anoInicioAtividade = diretorRequest.getAnoInicioAtividade();
 
         if (anoInicioAtividade < anoNascimento) {
-            throw new ExceptionAnoInicioAtividade(diretorOuDiretora);
+            throw new ExceptionAnoInicioAtividade(TipoDominioException.DIRETOR.getSingular());
         }
     }
 
@@ -145,7 +134,7 @@ public class DiretorService {
         List<Diretor> diretores = fakeDatabase.recuperaDiretores();
         for (Diretor diretor : diretores) {
             if (diretor.getNome().equals(nomeDoDiretor)) {
-                throw new ExceptionCadastroDuplicado(diretorOuDiretora, nomeDoDiretor);
+                throw new ExceptionCadastroDuplicado(TipoDominioException.DIRETOR.getSingular(), nomeDoDiretor);
             }
         }
     }

@@ -4,18 +4,17 @@ package br.com.cwi.reset.hugocabral.service;
 import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.domain.Ator;
 import br.com.cwi.reset.hugocabral.domain.AtorEmAtividade;
+import br.com.cwi.reset.hugocabral.domain.Constantes;
 import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
 import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AtorService {
-    private final String atorOuAtriz = "Ator ou Atriz";
 
     private FakeDatabase fakeDatabase;
     private Integer sequenceIdAtor = 0;
@@ -24,37 +23,20 @@ public class AtorService {
         this.fakeDatabase = fakeDatabase;
     }
 
-    public void criarAtor(AtorRequest atorRequest) {
-        try {
-            atorRequest.setId(gerarIdAtor());
+    public void criarAtor(AtorRequest atorRequest) throws ExceptionCampoInvalido,
+            ExceptionNomeESobrenome,ExceptionDataDeNascimento,
+            ExceptionAnoInicioAtividade,ExceptionCadastroDuplicado{
+
             validaCamposObrigatorios(atorRequest);
             validaNomeESobrenome(atorRequest);
             validaDataNascimento(atorRequest);
             validaAnoInicioAtividade(atorRequest);
             validaDuplicidadeCadastro(atorRequest);
 
-            fakeDatabase.persisteAtor(atorRequest);
+            sequenceIdAtor = gerarIdAtor();
+            final Ator ator = new Ator(sequenceIdAtor, atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
+            fakeDatabase.persisteAtor(ator);
 
-        }//Caso ExceptionCampoInvalido
-        catch (ExceptionCampoInvalido e) {
-            e.printStackTrace();
-        }
-        //Caso ExceptionNomeESobrenome
-        catch (ExceptionNomeESobrenome e) {
-            e.printStackTrace();
-        }
-        //Caso ExceptionDataDeNascimento
-        catch (ExceptionDataDeNascimento e) {
-            e.printStackTrace();
-        }
-        //Caso ExceptionAnoInicioAtividade
-        catch (ExceptionAnoInicioAtividade e) {
-            e.printStackTrace();
-        }
-        //Caso ExceptionCadastroDuplicado
-        catch (ExceptionCadastroDuplicado e) {
-            e.printStackTrace();
-        }
     }
 
     // Demais métodos da classe
@@ -86,29 +68,27 @@ public class AtorService {
 
     }
 
-    public Optional<Ator> consultarAtor(Integer id) throws ExceptionIdObrigatorio {
+    public Ator consultarAtor(Integer id) throws Exception, ExceptionConsultaId {
 
         if (id == null) {
             throw new ExceptionIdObrigatorio("id");
         }
+        final List<Ator> atores = fakeDatabase.recuperaAtores();
 
-        List<Ator> atores = fakeDatabase.recuperaAtores();
-        //filtrando ator pelo id
-        Optional<Ator> atorEncontrado = atores.stream()
-                .filter(ator -> id.equals(ator.getId()))
-                .findFirst();
+            for (Ator ator : atores) {
+                if (id.equals(ator.getId())) {
+                    return ator;
+                }
+            }
 
-        if (!atorEncontrado.isPresent()) {
-            throw new ExceptionIdObrigatorio("id");
-        }
+            throw new ExceptionConsultaId(TipoDominioException.ATOR.getSingular(), id);
 
-        return atorEncontrado;
     }
 
     public List<Ator> consultarAtores() throws ExceptionSemCadastro {
         List<Ator> list = fakeDatabase.recuperaAtores();
         if (list.isEmpty()) {
-            throw new ExceptionSemCadastro("Ator");
+            throw new ExceptionSemCadastro(TipoDominioException.ATOR.getSingular(),TipoDominioException.ATOR.getPlural());
         }
         return list;
     }
@@ -118,43 +98,33 @@ public class AtorService {
     }
 
     private void validaCamposObrigatorios(AtorRequest atorRequest) throws ExceptionCampoInvalido {
-        List<String> campo = new ArrayList();
-        boolean campoNulo = false;
 
         String nome = atorRequest.getNome();
         if (nome == null || nome.equals("")) {
-            campo.add(atorRequest.CAMPO_NOME);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_NOME);
         }
 
         LocalDate dataNascimento = atorRequest.getDataNascimento();
         if (dataNascimento == null) {
-            campo.add(AtorRequest.CAMPO_DATA_NASCIMENTO);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_DATA_NASCIMENTO);
         }
 
         Integer anoInicioAtividade = atorRequest.getAnoInicioAtividade();
         if (anoInicioAtividade == null) {
-            campo.add(atorRequest.CAMPO_ANO_INICIO_ATIVIDADE);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_ANO_INICIO_ATIVIDADE);
         }
 
         StatusCarreira statusCarreira = atorRequest.getStatusCarreira();
         if (statusCarreira == null) {
-            campo.add(atorRequest.CAMPO_STATUS_CARREIRA);
-            campoNulo = true;
+            throw new ExceptionCampoInvalido(Constantes.CAMPO_STATUS_CARREIRA);
         }
 
-        //Os campos que for null active o ExceptionCampoInvalido
-        if (campoNulo) {
-            throw new ExceptionCampoInvalido(campo);
-        }
     }
 
     private void validaNomeESobrenome(AtorRequest atorRequest) throws ExceptionNomeESobrenome {
         String[] nomeSobrenome = atorRequest.getNome().split(" ");
         if (nomeSobrenome.length < 2) {
-            throw new ExceptionNomeESobrenome(atorOuAtriz);
+            throw new ExceptionNomeESobrenome(TipoDominioException.ATOR.getSingular());
         }
     }
 
@@ -163,7 +133,7 @@ public class AtorService {
         Integer anoNascimento = atorRequest.getDataNascimento().getYear();
 
         if (anoNascimento > anoAtual) {
-            throw new ExceptionDataDeNascimento(atorOuAtriz);
+            throw new ExceptionDataDeNascimento(TipoDominioException.ATOR.getSingular());
         }
     }
 
@@ -172,7 +142,7 @@ public class AtorService {
         Integer anoInicioAtividade = atorRequest.getAnoInicioAtividade();
 
         if (anoInicioAtividade < anoNascimento) {
-            throw new ExceptionAnoInicioAtividade(atorOuAtriz);
+            throw new ExceptionAnoInicioAtividade(TipoDominioException.ATOR.getSingular());
         }
     }
 
@@ -181,7 +151,7 @@ public class AtorService {
         List<Ator> atores = fakeDatabase.recuperaAtores();
         for (Ator ator : atores) {
             if (ator.getNome().equals(nomeDoAtor)) {
-                throw new ExceptionCadastroDuplicado(atorOuAtriz, nomeDoAtor);
+                throw new ExceptionCadastroDuplicado(TipoDominioException.ATOR.getSingular(), nomeDoAtor);
             }
         }
     }

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExceptionDataDeNascimento extends Exception{
-    public ExceptionDataDeNascimento(String nome) {
-        super("Não é possível cadastrar " + nome + " não nascidos.");
+    public ExceptionDataDeNascimento(String tipo) {
+        super("Não é possível cadastrar " + tipo + " não nascidos.");
     }
 }

@@ -3,26 +3,58 @@ package br.com.cwi.reset.hugocabral.domain;
 import java.time.LocalDate;
 
 
-public class Ator extends Pessoa {
-    public final static String CAMPO_STATUS_CARREIRA = "Status da Carreira";
-
-    private int id;
+public class Ator {
+    private Integer id;
+    private String nome;
+    private LocalDate dataNascimento;
     private StatusCarreira statusCarreira;
+    private Integer anoInicioAtividade;
 
-    public Ator(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
-        super(nome, dataNascimento, anoInicioAtividade);
+    public Ator(Integer id, String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
+        this.id = id;
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
         this.statusCarreira = statusCarreira;
+        this.anoInicioAtividade = anoInicioAtividade;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public StatusCarreira getStatusCarreira() {
         return statusCarreira;
+    }
+
+    public void setStatusCarreira(StatusCarreira statusCarreira) {
+        this.statusCarreira = statusCarreira;
+    }
+
+    public Integer getAnoInicioAtividade() {
+        return anoInicioAtividade;
+    }
+
+    public void setAnoInicioAtividade(Integer anoInicioAtividade) {
+        this.anoInicioAtividade = anoInicioAtividade;
     }
 }
