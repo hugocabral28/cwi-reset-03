@@ -1,7 +1,11 @@
 package br.com.cwi.reset.hugocabral.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExceptionSemCadastro extends Exception{
     public ExceptionSemCadastro(String nome) {
-        System.out.println("Nenhum " + nome + " cadastrado, favor cadastar atores.");
+        super("Nenhum " + nome + " cadastrado, favor cadastar atores.");
     }
 }

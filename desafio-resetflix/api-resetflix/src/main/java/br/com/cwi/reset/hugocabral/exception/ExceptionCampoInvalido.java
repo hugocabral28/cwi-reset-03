@@ -1,11 +1,11 @@
 package br.com.cwi.reset.hugocabral.exception;
 
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExceptionCampoInvalido extends Exception {
-    public ExceptionCampoInvalido(List<String> campos) {
-        for(int i = 0; i < campos.size(); i++){
-            System.out.println("Campo obrigatório não informado. Favor informar o campo " + campos.get(i) + ".");
-        }
+    public ExceptionCampoInvalido(String campo) {
+            super("Campo obrigatório não informado. Favor informar o campo " + campo + ".");
     }
 }
