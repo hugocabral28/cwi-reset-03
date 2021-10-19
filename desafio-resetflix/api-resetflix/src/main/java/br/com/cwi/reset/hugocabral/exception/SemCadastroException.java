@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ExceptionSemCadastro extends Exception{
-    public ExceptionSemCadastro(String tipo, String tipoPlural) {
+public class SemCadastroException extends Exception{
+    public SemCadastroException(String tipo, String tipoPlural) {
         super(String.format("Nenhum %s cadastrado, favor cadastar %s.", tipo, tipoPlural));
 
     }

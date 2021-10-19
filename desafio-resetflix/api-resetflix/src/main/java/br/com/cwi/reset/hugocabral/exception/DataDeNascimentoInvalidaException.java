@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ExceptionCampoInvalido extends Exception {
-    public ExceptionCampoInvalido(String campo) {
-            super("Campo obrigatório não informado. Favor informar o campo " + campo + ".");
+public class DataDeNascimentoInvalidaException extends Exception{
+    public DataDeNascimentoInvalidaException(String tipo) {
+        super("Não é possível cadastrar " + tipo + " não nascidos.");
     }
 }
