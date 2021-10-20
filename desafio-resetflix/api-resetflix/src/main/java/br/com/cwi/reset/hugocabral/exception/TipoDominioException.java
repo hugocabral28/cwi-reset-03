@@ -2,7 +2,9 @@ package br.com.cwi.reset.hugocabral.exception;
 
 public enum TipoDominioException {
     ATOR("ator", "atores"),
-    DIRETOR("diretor", "diretores");
+    DIRETOR("diretor", "diretores"),
+    ESTUDIO("estúdio", "estúdios"),
+    FILME("filme", "filmes");
 
     private final String singular;
     private final String plural;
@@ -19,4 +21,5 @@ public enum TipoDominioException {
     public String getPlural() {
         return plural;
     }
+
 }
