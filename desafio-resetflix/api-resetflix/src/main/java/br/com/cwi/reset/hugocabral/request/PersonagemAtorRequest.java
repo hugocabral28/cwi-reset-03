@@ -1,34 +1,27 @@
-package br.com.cwi.reset.hugocabral.domain;
+package br.com.cwi.reset.hugocabral.request;
 
-public class PersonagemAtor {
-    private Integer id;
-    private Ator ator;
+import br.com.cwi.reset.hugocabral.domain.Ator;
+import br.com.cwi.reset.hugocabral.domain.TipoAtuacao;
+
+public class PersonagemAtorRequest {
+    private Integer idAtor;
     private String nomePersonagem;
     private String descricaoPersonagem;
     private TipoAtuacao tipoAtuacao;
 
-    public PersonagemAtor(Integer id, Ator ator, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) {
-        this.id = id;
-        this.ator = ator;
+    public PersonagemAtorRequest(Integer idAtor, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) {
+        this.idAtor = idAtor;
         this.nomePersonagem = nomePersonagem;
         this.descricaoPersonagem = descricaoPersonagem;
         this.tipoAtuacao = tipoAtuacao;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getIdAtor() {
+        return idAtor;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Ator getAtor() {
-        return ator;
-    }
-
-    public void setAtor(Ator ator) {
-        this.ator = ator;
+    public void setIdAtor(Integer idAtor) {
+        this.idAtor = idAtor;
     }
 
     public String getNomePersonagem() {

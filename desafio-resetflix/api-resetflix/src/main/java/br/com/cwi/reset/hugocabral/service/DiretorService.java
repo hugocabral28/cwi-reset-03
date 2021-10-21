@@ -74,7 +74,7 @@ public class DiretorService {
     public Diretor consultarDiretor(Integer id) throws Exception {
 
         if (id == null) {
-            throw new CampoObrigatorioException("id");
+            throw new CampoObrigatorioException(Constantes.CAMPO_ID);
         }
 
         final List<Diretor> diretores = fakeDatabase.recuperaDiretores();

@@ -84,7 +84,7 @@ public class AtorService {
     public Ator consultarAtor(Integer id) throws Exception {
 
         if (id == null) {
-            throw new CampoObrigatorioException("id");
+            throw new CampoObrigatorioException(Constantes.CAMPO_ID);
         }
 
         final List<Ator> atores = fakeDatabase.recuperaAtores();

@@ -5,8 +5,8 @@ import br.com.cwi.reset.hugocabral.domain.Ator;
 import br.com.cwi.reset.hugocabral.domain.AtorEmAtividade;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.service.AtorService;
-import org.springframework.http.HttpStatus;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
