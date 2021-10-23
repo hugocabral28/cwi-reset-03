@@ -4,11 +4,16 @@ import br.com.cwi.reset.projeto1.domain.Pet;
 import br.com.cwi.reset.projeto1.exception.PetJaExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetNaoExistenteException;
 import br.com.cwi.reset.projeto1.repository.PetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PetService {
-    private PetRepository repository = new PetRepository();
+
+    @Autowired
+    private PetRepository repository;
 
     public Pet salvar(Pet pet) throws PetJaExistenteException{
         Pet petJaexistente = repository.findByNome(pet.getNome());
@@ -16,9 +21,7 @@ public class PetService {
         if (petJaexistente != null) {
             throw new PetJaExistenteException(pet.getNome());
         }
-
-        repository.save(pet);
-        return pet;
+        return repository.save(pet);
     }
 
     public List<Pet> ListarTodos(){
@@ -40,7 +43,7 @@ public class PetService {
     public Pet atualizar(Pet pet) throws PetNaoExistenteException{
         Pet petExistente = buscarPorNome(pet.getNome());
         if (petExistente == null) {
-            throw new PetNaoExistenteException("Pet com o nome " + pet.getNome() + " não existe");
+            throw new PetNaoExistenteException(pet.getNome());
         }
         return repository.update(pet);
     }

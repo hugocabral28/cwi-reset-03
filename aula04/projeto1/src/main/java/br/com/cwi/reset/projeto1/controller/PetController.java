@@ -5,7 +5,8 @@ import br.com.cwi.reset.projeto1.domain.Pet;
 import br.com.cwi.reset.projeto1.exception.PetJaExistenteException;
 import br.com.cwi.reset.projeto1.exception.PetNaoExistenteException;
 import br.com.cwi.reset.projeto1.service.PetService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
 @RequestMapping("/pet")
 public class PetController {
 
-    private PetService petService = new PetService();
+    @Autowired
+    private PetService petService;
 
     @GetMapping
     public List<Pet> consultarTodos() {
@@ -22,37 +24,24 @@ public class PetController {
     }
 
     @GetMapping("/{nome}")
-    public Pet buscarPorNome(@PathVariable String nome) {
+    public Pet buscarPorNome(@PathVariable String nome) throws PetNaoExistenteException {
         return petService.buscarPorNome(nome);
     }
 
     @PostMapping
-    public ResponseEntity<Pet> cadastrarPet(@RequestBody Pet pet) {
-        try {
-            Pet petSalvo = petService.salvar(pet);
-            return ResponseEntity.ok(petSalvo);
-        } catch (PetJaExistenteException ex) {
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Pet cadastrarPet(@RequestBody Pet pet) throws PetJaExistenteException{
+        return petService.salvar(pet);
     }
 
     @PutMapping
-    public ResponseEntity atualizarPet(@RequestBody Pet pet) {
-        try {
-            return ResponseEntity.ok(petService.atualizar(pet));
-        } catch (PetNaoExistenteException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public Pet atualizarPet(@RequestBody Pet pet) throws PetNaoExistenteException{
+            return petService.atualizar(pet);
     }
 
     @DeleteMapping("/{nome}")
-    public ResponseEntity deletarPet(@PathVariable String nome) {
-        try {
+    public void deletarPet(@PathVariable String nome) throws PetNaoExistenteException{
             petService.deletarPet(nome);
-            return ResponseEntity.ok().build();
-        } catch (PetNaoExistenteException e) {
-            return ResponseEntity.badRequest().build();
-        }
     }
 
 }
