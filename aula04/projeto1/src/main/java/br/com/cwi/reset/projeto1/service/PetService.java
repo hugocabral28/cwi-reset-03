@@ -25,26 +25,26 @@ public class PetService {
     }
 
     public List<Pet> ListarTodos(){
-        return repository.findAll();
+        return (List<Pet>) repository.findAll();
     }
 
     public Pet buscarPorNome(String nome){
        return repository.findByNome(nome);
     }
 
-    public void deletarPet(String nomepet) throws PetNaoExistenteException {
-        Pet petExistente = repository.findByNome(nomepet);
-        if (petExistente == null) {
-            throw new PetNaoExistenteException(nomepet);
+    public void deletarPet(Integer id) throws PetNaoExistenteException {
+        boolean petExistente = repository.existsById(id);
+        if (petExistente == false) {
+            throw new PetNaoExistenteException("id");
         }
-        repository.delete(petExistente);
+        repository.deleteById(id);
     }
 
     public Pet atualizar(Pet pet) throws PetNaoExistenteException{
-        Pet petExistente = buscarPorNome(pet.getNome());
-        if (petExistente == null) {
+        boolean petExistente = repository.existsById(pet.getId());
+        if (petExistente == false) {
             throw new PetNaoExistenteException(pet.getNome());
         }
-        return repository.update(pet);
+        return repository.save(pet);
     }
 }

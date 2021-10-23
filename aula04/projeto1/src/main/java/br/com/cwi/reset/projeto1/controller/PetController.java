@@ -39,9 +39,9 @@ public class PetController {
             return petService.atualizar(pet);
     }
 
-    @DeleteMapping("/{nome}")
-    public void deletarPet(@PathVariable String nome) throws PetNaoExistenteException{
-            petService.deletarPet(nome);
+    @DeleteMapping("/{id}")
+    public void deletarPet(@PathVariable Integer id) throws PetNaoExistenteException{
+            petService.deletarPet(id);
     }
 
 }
