@@ -1,26 +1,27 @@
 package br.com.cwi.reset.hugocabral.service;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.Diretor;
 import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.exception.comum.*;
+import br.com.cwi.reset.hugocabral.repository.DiretorRepository;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
 import br.com.cwi.reset.hugocabral.validator.BasicInfoRequiredValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-
+@Service
 public class DiretorService {
 
-    private FakeDatabase fakeDatabase;
-    private Integer sequenceIdDiretor = 0;
+    @Autowired
+    private DiretorRepository repository;
     private BasicInfoRequiredValidator validator;
 
-    public DiretorService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
+    public DiretorService() {
         this.validator = new BasicInfoRequiredValidator();
     }
 
@@ -32,7 +33,7 @@ public class DiretorService {
         validator.validaNomeESobrenome(diretorRequest.getNome(), TipoDominioException.DIRETOR);
         validator.validaAnoInicioAtividade(diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade(), TipoDominioException.DIRETOR);
 
-        final List<Diretor> diretoresCadastrados = fakeDatabase.recuperaDiretores();
+        final List<Diretor> diretoresCadastrados = repository.findAll();
         for (Diretor diretorCadastrado : diretoresCadastrados) {
             if (diretorCadastrado.getNome().equalsIgnoreCase(diretorRequest.getNome())) {
                 throw new CadastroDuplicadoException(TipoDominioException.DIRETOR.getSingular(), diretorRequest.getNome());
@@ -40,14 +41,13 @@ public class DiretorService {
         }
 
         /* ### Cadastrando ### */
-        sequenceIdDiretor = gerarIdDiretor();
-        final Diretor diretor = new Diretor(sequenceIdDiretor, diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
-        fakeDatabase.persisteDiretor(diretor);
+        final Diretor diretor = new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
+        repository.save(diretor);
     }
 
     // Demais métodos da classe
     public List<Diretor> listarDiretores(Optional<String> filtroNome) throws Exception {
-        final List<Diretor> diretoresCadastrados = fakeDatabase.recuperaDiretores();
+        final List<Diretor> diretoresCadastrados = repository.findAll();
 
         if (diretoresCadastrados.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.DIRETOR.getSingular(), TipoDominioException.DIRETOR.getPlural());
@@ -84,7 +84,7 @@ public class DiretorService {
             throw new ConsultaIdException(TipoDominioException.DIRETOR.getSingular(), id);
         }
 
-        final List<Diretor> diretores = fakeDatabase.recuperaDiretores();
+        final List<Diretor> diretores = repository.findAll();
 
         for (Diretor diretore : diretores) {
             if (id.equals(diretore.getId())) {
@@ -97,15 +97,12 @@ public class DiretorService {
     }
 
     public List<Diretor> consultarDiretor() throws SemCadastroException {
-        List<Diretor> list = fakeDatabase.recuperaDiretores();
+        List<Diretor> list = repository.findAll();
         if (list.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.DIRETOR.getSingular(), TipoDominioException.DIRETOR.getPlural());
         }
         return list;
     }
 
-    private Integer gerarIdDiretor() {
-        return ++sequenceIdDiretor;
-    }
 
 }

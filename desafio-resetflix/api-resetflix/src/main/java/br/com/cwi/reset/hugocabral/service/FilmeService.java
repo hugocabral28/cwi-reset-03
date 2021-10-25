@@ -5,26 +5,34 @@ import br.com.cwi.reset.hugocabral.model.*;
 import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.exception.comum.CadastroDuplicadoException;
 import br.com.cwi.reset.hugocabral.exception.comum.SemCadastroException;
+import br.com.cwi.reset.hugocabral.repository.FilmeRepository;
 import br.com.cwi.reset.hugocabral.request.FilmeRequest;
 import br.com.cwi.reset.hugocabral.validator.FilmeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 import static java.util.Objects.isNull;
 
+@Service
 public class FilmeService {
-    private FakeDatabase fakeDatabase;
-    private Integer sequenceIdFilme = 0;
+
+    @Autowired
+    private FilmeRepository filmeRepository;
+    @Autowired
     private DiretorService diretorService;
+    @Autowired
     private EstudioService estudioService;
+    @Autowired
     private PersonagemService personagemAtorService;
+
     private FilmeValidator validator;
 
-    public FilmeService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-        this.diretorService = new DiretorService(fakeDatabase);
-        this.estudioService = new EstudioService(fakeDatabase);
-        this.personagemAtorService = new PersonagemService(fakeDatabase);
+    public FilmeService() {
+        this.diretorService = new DiretorService();
+        this.estudioService = new EstudioService();
+        this.personagemAtorService = new PersonagemService();
         this.validator = new FilmeValidator();
     }
 
@@ -33,10 +41,7 @@ public class FilmeService {
         validator.validaCamposObrigatorios(filmeRequest);
         validaDuplicidadeCadastro(filmeRequest);
 
-        sequenceIdFilme = gerarIdFilme();
-
-        final Filme filme = new Filme(sequenceIdFilme,
-                filmeRequest.getNome(),
+        final Filme filme = new Filme(filmeRequest.getNome(),
                 filmeRequest.getAnoLancamento(),
                 filmeRequest.getCapaFilme(),
                 filmeRequest.getGeneros(),
@@ -59,7 +64,7 @@ public class FilmeService {
             }
         }
 
-        fakeDatabase.persisteFilme(filme);
+        filmeRepository.save(filme);
     }
 
     public List<Filme> consultarFilmes(
@@ -68,7 +73,7 @@ public class FilmeService {
             Optional<String> nomePersonagem,
             Optional<String> nomeAtor) throws Exception {
 
-        final List<Filme> filmesCadastrados = fakeDatabase.recuperaFilmes();
+        final List<Filme> filmesCadastrados = filmeRepository.findAll();
 
         if (filmesCadastrados.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.FILME.getSingular(), TipoDominioException.FILME.getPlural());
@@ -174,13 +179,9 @@ public class FilmeService {
         return filmeFiltrado;
     }
 
-    private Integer gerarIdFilme() {
-        return ++sequenceIdFilme;
-    }
-
     private void validaDuplicidadeCadastro(FilmeRequest filmeRequest) throws CadastroDuplicadoException {
         String nomeDoFilme = filmeRequest.getNome();
-        List<Filme> filmes = fakeDatabase.recuperaFilmes();
+        List<Filme> filmes = filmeRepository.findAll();
         for (Filme filme : filmes) {
             if (filme.getNome().toLowerCase(Locale.ROOT).equals(nomeDoFilme.toLowerCase(Locale.ROOT))) {
                 throw new CadastroDuplicadoException(TipoDominioException.FILME.getSingular(), nomeDoFilme);

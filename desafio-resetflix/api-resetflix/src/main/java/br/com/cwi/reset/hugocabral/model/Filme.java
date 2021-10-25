@@ -1,20 +1,35 @@
 package br.com.cwi.reset.hugocabral.model;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Filme {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
     private Integer anoLancamento;
     private String capaFilme;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private List<Genero> genero;
+    @ManyToOne
+    @JoinColumn(name = "id_diretor")
     private Diretor diretor;
+    @ManyToOne
+    @JoinColumn(name = "id_estudio")
     private Estudio estudio;
+    @OneToMany
+    @JoinColumn(name = "id_personagem_ator")
     private List<PersonagemAtor> personagens;
     private String resumo;
 
-    public Filme(Integer id,
+    public Filme() {
+    }
+
+    public Filme(
                  String nome,
                  Integer anoLancamento,
                  String capaFilme,
@@ -24,7 +39,6 @@ public class Filme {
                  String resumo,
                  List<PersonagemAtor> personagens
                  ) {
-        this.id = id;
         this.nome = nome;
         this.anoLancamento = anoLancamento;
         this.capaFilme = capaFilme;

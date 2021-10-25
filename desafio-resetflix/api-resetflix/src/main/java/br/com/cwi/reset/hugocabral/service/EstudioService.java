@@ -4,21 +4,25 @@ import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.*;
 import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.exception.comum.*;
+import br.com.cwi.reset.hugocabral.repository.EstudioRepository;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
 import br.com.cwi.reset.hugocabral.validator.EstudioValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+@Service
 public class EstudioService {
-    private FakeDatabase fakeDatabase;
-    private Integer sequenceIdEstudio = 0;
+
+    @Autowired
+    private EstudioRepository repository;
     private EstudioValidator validator;
 
-    public EstudioService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
+    public EstudioService() {
         this.validator = new EstudioValidator();
     }
 
@@ -29,13 +33,12 @@ public class EstudioService {
         validaDuplicidadeCadastro(estudioRequest);
 
         /* ### Cadastrando ### */
-        sequenceIdEstudio = gerarIdEstudio();
-        final Estudio estudio = new Estudio(sequenceIdEstudio, estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
-        fakeDatabase.persisteEstudio(estudio);
+        final Estudio estudio = new Estudio(estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
+        repository.save(estudio);
     }
 
     public List<Estudio> consultarEstudios(Optional<String> filtroNome) throws Exception {
-        final List<Estudio> estudiosCadastrados = fakeDatabase.recuperaEstudios();
+        final List<Estudio> estudiosCadastrados = repository.findAll();
 
         if (estudiosCadastrados.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ESTUDIO.getSingular(), TipoDominioException.ESTUDIO.getPlural());
@@ -72,7 +75,7 @@ public class EstudioService {
             throw new ConsultaIdException(TipoDominioException.ESTUDIO.getSingular(), id);
         }
 
-        final List<Estudio> estudios = fakeDatabase.recuperaEstudios();
+        final List<Estudio> estudios = repository.findAll();
 
         for (Estudio estudio : estudios) {
             if (id.equals(estudio.getId())) {
@@ -84,13 +87,9 @@ public class EstudioService {
 
     }
 
-    private Integer gerarIdEstudio() {
-        return ++sequenceIdEstudio;
-    }
-
     private void validaDuplicidadeCadastro(EstudioRequest estudioRequest) throws CadastroDuplicadoException {
         String nomeDoEstudio = estudioRequest.getNome();
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
+        List<Estudio> estudios = repository.findAll();
         for (Estudio estudio : estudios) {
             if (estudio.getNome().toLowerCase(Locale.ROOT).equals(nomeDoEstudio.toLowerCase(Locale.ROOT))) {
                 throw new CadastroDuplicadoException(TipoDominioException.ESTUDIO.getSingular(), nomeDoEstudio);

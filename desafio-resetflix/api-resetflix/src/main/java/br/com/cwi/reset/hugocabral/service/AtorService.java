@@ -1,8 +1,7 @@
 package br.com.cwi.reset.hugocabral.service;
 
-
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.Ator;
+import br.com.cwi.reset.hugocabral.repository.AtorRepository;
 import br.com.cwi.reset.hugocabral.response.AtorEmAtividade;
 import br.com.cwi.reset.hugocabral.validator.Constantes;
 import br.com.cwi.reset.hugocabral.model.StatusCarreira;
@@ -10,22 +9,28 @@ import br.com.cwi.reset.hugocabral.exception.*;
 import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.validator.BasicInfoRequiredValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+@Service
 public class AtorService {
 
-    private FakeDatabase fakeDatabase;
-    private Integer sequenceIdAtor = 0;
+    @Autowired
+    private AtorRepository repository;
     private BasicInfoRequiredValidator validator;
 
-    public AtorService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
+
+    public AtorService() {
         this.validator = new BasicInfoRequiredValidator();
     }
+
+
+
 
     public void criarAtor(AtorRequest atorRequest) throws Exception {
 
@@ -39,7 +44,7 @@ public class AtorService {
             throw new CampoObrigatorioException(Constantes.CAMPO_STATUS_CARREIRA);
         }
 
-        final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
+        final List<Ator> atoresCadastrados = repository.findAll();
 
         for (Ator atorCadastrado : atoresCadastrados) {
             if (atorCadastrado.getNome().equalsIgnoreCase(atorRequest.getNome())) {
@@ -48,15 +53,14 @@ public class AtorService {
         }
 
         /* ### Cadastrando ### */
-        sequenceIdAtor = gerarIdAtor();
-        final Ator ator = new Ator(sequenceIdAtor, atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-        fakeDatabase.persisteAtor(ator);
+        final Ator ator = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
+        repository.save(ator);
 
     }
 
     // Demais métodos da classe
     public List<AtorEmAtividade> listarAtoresEmAtividade(Optional<String> filtroNome) throws Exception {
-        final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
+        final List<Ator> atoresCadastrados = repository.findAll();
 
         if (atoresCadastrados.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
@@ -100,7 +104,7 @@ public class AtorService {
             throw new CampoObrigatorioException(Constantes.CAMPO_ID);
         }
 
-        final List<Ator> atores = fakeDatabase.recuperaAtores();
+        final List<Ator> atores = repository.findAll();
 
         for (Ator ator : atores) {
             if (id.equals(ator.getId())) {
@@ -113,14 +117,11 @@ public class AtorService {
     }
 
     public List<Ator> consultarAtores() throws SemCadastroException {
-        List<Ator> list = fakeDatabase.recuperaAtores();
+        List<Ator> list = repository.findAll();
         if (list.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
         }
         return list;
     }
 
-    private Integer gerarIdAtor() {
-        return ++sequenceIdAtor;
-    }
 }

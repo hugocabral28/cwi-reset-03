@@ -1,24 +1,26 @@
 package br.com.cwi.reset.hugocabral.service;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.*;
+import br.com.cwi.reset.hugocabral.repository.PersonagemRepository;
 import br.com.cwi.reset.hugocabral.request.PersonagemRequest;
 import br.com.cwi.reset.hugocabral.validator.PersonagemValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Service
 public class PersonagemService {
 
-    private FakeDatabase fakeDatabase;
-    private Integer sequenceIdPersonagem = 0;
+    @Autowired
+    private PersonagemRepository personagemRepository;
+    @Autowired
     private AtorService atorService;
     private PersonagemValidator validator;
 
-    public PersonagemService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-        this.atorService = new AtorService(fakeDatabase);
+    public PersonagemService() {
+        this.atorService = new AtorService();
         this.validator = new PersonagemValidator();
     }
 
@@ -40,23 +42,19 @@ public class PersonagemService {
 
         /* ### Cadastrando ### */
         final Ator ator = atorService.consultarAtor(personagemAtorRequest.getIdAtor());
-        sequenceIdPersonagem = gerarIdPersonagem();
-        final PersonagemAtor personagemAtor = new PersonagemAtor(sequenceIdPersonagem,
+
+        final PersonagemAtor personagemAtor = new PersonagemAtor(
                 ator,
                 personagemAtorRequest.getNomePersonagem(),
                 personagemAtorRequest.getDescricaoPersonagem(),
                 personagemAtorRequest.getTipoAtuacao());
 
-        fakeDatabase.persistePersonagem(personagemAtor);
+        personagemRepository.save(personagemAtor);
 
         return personagemAtor;
     }
     public List<PersonagemAtor> consultarPersonagemAtor(String nome) throws Exception {
-        return fakeDatabase.recuperaPersonagens();
-    }
-
-    private Integer gerarIdPersonagem() {
-        return ++sequenceIdPersonagem;
+        return personagemRepository.findAll();
     }
 
 

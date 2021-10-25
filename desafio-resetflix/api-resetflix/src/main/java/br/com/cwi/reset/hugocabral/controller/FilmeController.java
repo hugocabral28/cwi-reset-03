@@ -1,9 +1,9 @@
 package br.com.cwi.reset.hugocabral.controller;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.Filme;
 import br.com.cwi.reset.hugocabral.request.FilmeRequest;
 import br.com.cwi.reset.hugocabral.service.FilmeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +14,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("filmes")
 public class FilmeController {
-    private FilmeService filmeService;
 
-    public FilmeController() {
-        this.filmeService = new FilmeService(FakeDatabase.getInstance());
-    }
+    @Autowired
+    private FilmeService filmeService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
