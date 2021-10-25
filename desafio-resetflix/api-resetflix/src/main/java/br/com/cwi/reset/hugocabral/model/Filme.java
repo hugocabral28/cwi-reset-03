@@ -1,6 +1,7 @@
-package br.com.cwi.reset.hugocabral.domain;
+package br.com.cwi.reset.hugocabral.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Filme {
     private Integer id;
@@ -20,8 +21,9 @@ public class Filme {
                  List<Genero> genero,
                  Diretor diretor,
                  Estudio estudio,
-                 List<PersonagemAtor> personagens,
-                 String resumo) {
+                 String resumo,
+                 List<PersonagemAtor> personagens
+                 ) {
         this.id = id;
         this.nome = nome;
         this.anoLancamento = anoLancamento;
@@ -29,8 +31,8 @@ public class Filme {
         this.genero = genero;
         this.diretor = diretor;
         this.estudio = estudio;
-        this.personagens = personagens;
         this.resumo = resumo;
+        this.personagens = personagens;
     }
 
     public Integer getId() {
@@ -103,5 +105,18 @@ public class Filme {
 
     public void setResumo(String resumo) {
         this.resumo = resumo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Filme filme = (Filme) o;
+        return Objects.equals(id, filme.id) && Objects.equals(nome, filme.nome) && Objects.equals(anoLancamento, filme.anoLancamento) && Objects.equals(capaFilme, filme.capaFilme) && Objects.equals(genero, filme.genero) && Objects.equals(diretor, filme.diretor) && Objects.equals(estudio, filme.estudio) && Objects.equals(personagens, filme.personagens) && Objects.equals(resumo, filme.resumo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, anoLancamento, capaFilme, genero, diretor, estudio, personagens, resumo);
     }
 }

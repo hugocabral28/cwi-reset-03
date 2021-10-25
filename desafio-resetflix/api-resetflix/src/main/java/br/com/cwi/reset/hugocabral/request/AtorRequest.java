@@ -1,6 +1,6 @@
 package br.com.cwi.reset.hugocabral.request;
 
-import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
+import br.com.cwi.reset.hugocabral.model.StatusCarreira;
 
 import java.time.LocalDate;
 

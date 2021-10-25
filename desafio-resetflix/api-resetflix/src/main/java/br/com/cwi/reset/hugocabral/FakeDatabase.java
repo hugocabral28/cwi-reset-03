@@ -1,6 +1,6 @@
 package br.com.cwi.reset.hugocabral;
 
-import br.com.cwi.reset.hugocabral.domain.*;
+import br.com.cwi.reset.hugocabral.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

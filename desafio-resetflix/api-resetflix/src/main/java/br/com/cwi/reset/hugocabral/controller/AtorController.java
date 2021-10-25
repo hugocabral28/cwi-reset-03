@@ -1,8 +1,8 @@
 package br.com.cwi.reset.hugocabral.controller;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.Ator;
-import br.com.cwi.reset.hugocabral.domain.AtorEmAtividade;
+import br.com.cwi.reset.hugocabral.model.Ator;
+import br.com.cwi.reset.hugocabral.response.AtorEmAtividade;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
 import br.com.cwi.reset.hugocabral.service.AtorService;
 

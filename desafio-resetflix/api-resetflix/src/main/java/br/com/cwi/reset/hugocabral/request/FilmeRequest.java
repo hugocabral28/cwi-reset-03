@@ -1,8 +1,7 @@
 package br.com.cwi.reset.hugocabral.request;
 
-import br.com.cwi.reset.hugocabral.domain.Diretor;
-import br.com.cwi.reset.hugocabral.domain.Estudio;
-import br.com.cwi.reset.hugocabral.domain.Genero;
+
+import br.com.cwi.reset.hugocabral.model.Genero;
 
 import java.util.List;
 
@@ -10,27 +9,27 @@ public class FilmeRequest {
     private String nome;
     private Integer anoLancamento;
     private String capaFilme;
-    private List<Genero> genero;
+    private List<Genero> generos;
     private Integer idDiretor;
     private Integer idEstudio;
     private String resumo;
-    private List<PersonagemAtorRequest> personagens;
+    private List<PersonagemRequest> personagens;
 
     public FilmeRequest(String nome,
                         Integer anoLancamento,
                         String capaFilme,
-                        List<Genero> genero,
-                        Diretor idDiretor,
-                        Estudio idEstudio,
-                        List<PersonagemAtorRequest> personagens,
-                        String resumo
+                        List<Genero> generos,
+                        Integer idDiretor,
+                        Integer idEstudio,
+                        String resumo,
+                        List<PersonagemRequest> personagens
     ) {
         this.nome = nome;
         this.anoLancamento = anoLancamento;
         this.capaFilme = capaFilme;
-        this.genero = genero;
-        this.idDiretor = idDiretor.getId();
-        this.idEstudio = idEstudio.getId();
+        this.generos = generos;
+        this.idDiretor = idDiretor;
+        this.idEstudio = idEstudio;
         this.resumo = resumo;
         this.personagens = personagens;
     }
@@ -59,12 +58,12 @@ public class FilmeRequest {
         this.capaFilme = capaFilme;
     }
 
-    public List<Genero> getGenero() {
-        return genero;
+    public List<Genero> getGeneros() {
+        return generos;
     }
 
     public void setGenero(List<Genero> genero) {
-        this.genero = genero;
+        this.generos = genero;
     }
 
     public Integer getIdDiretor() {
@@ -91,11 +90,11 @@ public class FilmeRequest {
         this.resumo = resumo;
     }
 
-    public List<PersonagemAtorRequest> getPersonagens() {
+    public List<PersonagemRequest> getPersonagens() {
         return personagens;
     }
 
-    public void setPersonagens(List<PersonagemAtorRequest> personagens) {
+    public void setPersonagens(List<PersonagemRequest> personagens) {
         this.personagens = personagens;
     }
 }

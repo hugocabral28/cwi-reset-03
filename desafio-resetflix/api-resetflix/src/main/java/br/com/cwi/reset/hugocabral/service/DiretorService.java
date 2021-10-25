@@ -1,12 +1,12 @@
 package br.com.cwi.reset.hugocabral.service;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.Constantes;
-import br.com.cwi.reset.hugocabral.domain.Diretor;
+import br.com.cwi.reset.hugocabral.model.Diretor;
 import br.com.cwi.reset.hugocabral.exception.*;
+import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
+import br.com.cwi.reset.hugocabral.validator.BasicInfoRequiredValidator;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -17,22 +17,30 @@ public class DiretorService {
 
     private FakeDatabase fakeDatabase;
     private Integer sequenceIdDiretor = 0;
+    private BasicInfoRequiredValidator validator;
 
     public DiretorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+        this.validator = new BasicInfoRequiredValidator();
     }
 
-    public void cadastrarDiretor(DiretorRequest diretorRequest) throws CampoObrigatorioException,
-            NomeESobrenomeException, DataDeNascimentoInvalidaException,
-            AnoInicioAtividadeInvalidoException, CadastroDuplicadoException {
+    public void cadastrarDiretor(DiretorRequest diretorRequest) throws Exception {
 
-        validaCamposObrigatorios(diretorRequest);
-        validaNomeESobrenome(diretorRequest);
-        validaDataNascimento(diretorRequest);
-        validaAnoInicioAtividade(diretorRequest);
-        validaDuplicidadeCadastro(diretorRequest);
+        /* ### Validações ### */
+        validator.validaCamposObrigatorios(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade(), TipoDominioException.DIRETOR);
+        validator.validaDataNascimento(diretorRequest.getDataNascimento(), TipoDominioException.DIRETOR);
+        validator.validaNomeESobrenome(diretorRequest.getNome(), TipoDominioException.DIRETOR);
+        validator.validaAnoInicioAtividade(diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade(), TipoDominioException.DIRETOR);
+
+        final List<Diretor> diretoresCadastrados = fakeDatabase.recuperaDiretores();
+        for (Diretor diretorCadastrado : diretoresCadastrados) {
+            if (diretorCadastrado.getNome().equalsIgnoreCase(diretorRequest.getNome())) {
+                throw new CadastroDuplicadoException(TipoDominioException.DIRETOR.getSingular(), diretorRequest.getNome());
+            }
+        }
+
+        /* ### Cadastrando ### */
         sequenceIdDiretor = gerarIdDiretor();
-
         final Diretor diretor = new Diretor(sequenceIdDiretor, diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
         fakeDatabase.persisteDiretor(diretor);
     }
@@ -70,11 +78,10 @@ public class DiretorService {
         return retorno;
     }
 
-
     public Diretor consultarDiretor(Integer id) throws Exception {
 
         if (id == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_ID);
+            throw new ConsultaIdException(TipoDominioException.DIRETOR.getSingular(), id);
         }
 
         final List<Diretor> diretores = fakeDatabase.recuperaDiretores();
@@ -101,57 +108,4 @@ public class DiretorService {
         return ++sequenceIdDiretor;
     }
 
-    private void validaCamposObrigatorios(DiretorRequest diretorRequest) throws CampoObrigatorioException {
-
-        String nome = diretorRequest.getNome();
-        if (nome == null || nome.equals("")) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_NOME);
-        }
-
-        LocalDate dataNascimento = diretorRequest.getDataNascimento();
-        if (dataNascimento == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_DATA_NASCIMENTO);
-        }
-
-        Integer anoInicioAtividade = diretorRequest.getAnoInicioAtividade();
-        if (anoInicioAtividade == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_ANO_INICIO_ATIVIDADE);
-        }
-
-    }
-
-    private void validaNomeESobrenome(DiretorRequest diretorRequest) throws NomeESobrenomeException {
-        String[] nomeSobrenome = diretorRequest.getNome().trim().split(" ");
-        if (nomeSobrenome.length < 2) {
-            throw new NomeESobrenomeException(TipoDominioException.DIRETOR.getSingular());
-        }
-    }
-
-    private void validaDataNascimento(DiretorRequest diretorRequest) throws DataDeNascimentoInvalidaException {
-        Integer anoAtual = LocalDate.now().getYear();
-        Integer anoNascimento = diretorRequest.getDataNascimento().getYear();
-
-        if (anoNascimento > anoAtual) {
-            throw new DataDeNascimentoInvalidaException(TipoDominioException.DIRETOR.getSingular());
-        }
-    }
-
-    private void validaAnoInicioAtividade(DiretorRequest diretorRequest) throws AnoInicioAtividadeInvalidoException {
-        Integer anoNascimento = diretorRequest.getDataNascimento().getYear();
-        Integer anoInicioAtividade = diretorRequest.getAnoInicioAtividade();
-
-        if (anoInicioAtividade < anoNascimento) {
-            throw new AnoInicioAtividadeInvalidoException(TipoDominioException.DIRETOR.getSingular());
-        }
-    }
-
-    private void validaDuplicidadeCadastro(DiretorRequest diretorRequest) throws CadastroDuplicadoException {
-        String nomeDoDiretor = diretorRequest.getNome();
-        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
-        for (Diretor diretor : diretores) {
-            if (diretor.getNome().toLowerCase(Locale.ROOT).equals(nomeDoDiretor.toLowerCase(Locale.ROOT))) {
-                throw new CadastroDuplicadoException(TipoDominioException.DIRETOR.getSingular(), nomeDoDiretor);
-            }
-        }
-    }
 }

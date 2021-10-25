@@ -1,4 +1,4 @@
-package br.com.cwi.reset.hugocabral.domain;
+package br.com.cwi.reset.hugocabral.model;
 
 public enum StatusAtividade {
     EM_ATIVIDADE("Em Atividade"),

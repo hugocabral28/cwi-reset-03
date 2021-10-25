@@ -1,7 +1,7 @@
 package br.com.cwi.reset.hugocabral.controller;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.Diretor;
+import br.com.cwi.reset.hugocabral.model.Diretor;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
 import br.com.cwi.reset.hugocabral.service.DiretorService;
 import org.springframework.http.HttpStatus;

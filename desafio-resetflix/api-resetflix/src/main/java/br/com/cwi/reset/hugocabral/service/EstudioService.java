@@ -1,11 +1,12 @@
 package br.com.cwi.reset.hugocabral.service;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.*;
+import br.com.cwi.reset.hugocabral.model.*;
 import br.com.cwi.reset.hugocabral.exception.*;
+import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
+import br.com.cwi.reset.hugocabral.validator.EstudioValidator;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -14,19 +15,22 @@ import java.util.Optional;
 public class EstudioService {
     private FakeDatabase fakeDatabase;
     private Integer sequenceIdEstudio = 0;
+    private EstudioValidator validator;
 
     public EstudioService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+        this.validator = new EstudioValidator();
     }
 
-    public void criarEstudio(EstudioRequest estudioRequest) throws Exception{
-        validaCamposObrigatorios(estudioRequest);
-        validaDataCriacao(estudioRequest);
+    public void criarEstudio(EstudioRequest estudioRequest) throws Exception {
+        /* ### Validações ### */
+        validator.validaCamposObrigatorios(estudioRequest);
+        validator.validaDataCriacao(estudioRequest.getDataCriacao(), TipoDominioException.ESTUDIO);
         validaDuplicidadeCadastro(estudioRequest);
 
+        /* ### Cadastrando ### */
         sequenceIdEstudio = gerarIdEstudio();
-
-        final Estudio estudio = new Estudio(sequenceIdEstudio, estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(),estudioRequest.getStatusAtividade());
+        final Estudio estudio = new Estudio(sequenceIdEstudio, estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
         fakeDatabase.persisteEstudio(estudio);
     }
 
@@ -65,7 +69,7 @@ public class EstudioService {
     public Estudio consultarEstudio(Integer id) throws Exception {
 
         if (id == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_ID);
+            throw new ConsultaIdException(TipoDominioException.ESTUDIO.getSingular(), id);
         }
 
         final List<Estudio> estudios = fakeDatabase.recuperaEstudios();
@@ -82,39 +86,6 @@ public class EstudioService {
 
     private Integer gerarIdEstudio() {
         return ++sequenceIdEstudio;
-    }
-
-    private void validaCamposObrigatorios(EstudioRequest estudioRequest) throws CampoObrigatorioException {
-
-        String nome = estudioRequest.getNome();
-        if (nome == null || nome.equals("")) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_NOME);
-        }
-
-        String descricao = estudioRequest.getDescricao();
-        if (descricao == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_DESCRICAO);
-        }
-
-        LocalDate dataCriacao = estudioRequest.getDataCriacao();
-        if (dataCriacao == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_DATA_CRIACAO);
-        }
-
-        StatusAtividade statusAtividade = estudioRequest.getStatusAtividade();
-        if (statusAtividade == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_STATUS_ATIVIDADE);
-        }
-
-    }
-
-    private void validaDataCriacao(EstudioRequest estudioRequest) throws DataFuturaException {
-        LocalDate anoAtual = LocalDate.now();
-        LocalDate dataCriacao = estudioRequest.getDataCriacao();
-
-        if (dataCriacao.isAfter(anoAtual)) {
-            throw new DataFuturaException(TipoDominioException.ESTUDIO.getPlural());
-        }
     }
 
     private void validaDuplicidadeCadastro(EstudioRequest estudioRequest) throws CadastroDuplicadoException {

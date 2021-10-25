@@ -1,8 +1,6 @@
 package br.com.cwi.reset.hugocabral.request;
 
 
-import br.com.cwi.reset.hugocabral.domain.Diretor;
-
 import java.time.LocalDate;
 
 public class DiretorRequest {

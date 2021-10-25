@@ -1,4 +1,4 @@
-package br.com.cwi.reset.hugocabral.domain;
+package br.com.cwi.reset.hugocabral.validator;
 
 public abstract class Constantes {
     /*###### CAMPOS COMUM ######*/
@@ -18,6 +18,7 @@ public abstract class Constantes {
     public final static String CAMPO_GENERO = "Genero";
     public final static String CAMPO_RESUMO = "Resumo";
     /*###### CAMPOS PERSONAGEM ######*/
+    public static final String CAMPO_ID_ATOR = "Id Ator";
     public final static String CAMPO_NOME_PERSONAGEM = "Nome Personagem";
     public final static String CAMPO_TIPO_ATUACAO = "Tipo de Atuação";
     public final static String CAMPO_DESCRICAO_PERSONAGEM = "Descrição do Personagem";

@@ -1,6 +1,6 @@
 package br.com.cwi.reset.hugocabral.request;
 
-import br.com.cwi.reset.hugocabral.domain.StatusAtividade;
+import br.com.cwi.reset.hugocabral.model.StatusAtividade;
 
 import java.time.LocalDate;
 

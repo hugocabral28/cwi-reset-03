@@ -1,8 +1,15 @@
 package br.com.cwi.reset.projeto1.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.Period;
 
+@Entity
+@Table(name = "pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pessoa {
 
     private String nome;

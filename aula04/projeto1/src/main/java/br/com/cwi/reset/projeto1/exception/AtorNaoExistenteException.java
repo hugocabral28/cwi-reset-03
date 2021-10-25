@@ -4,8 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class PetNaoExistenteException extends Exception{
-    public PetNaoExistenteException(String nome) {
-        super(String.format("Pet com o nome %s não existe",nome));
+public class AtorNaoExistenteException extends Exception {
+
+    public AtorNaoExistenteException(String nome) {
+        super(String.format("Ator com o nome %s não existe",nome));
     }
 }

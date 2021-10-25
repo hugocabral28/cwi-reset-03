@@ -1,4 +1,4 @@
-package br.com.cwi.reset.hugocabral.domain;
+package br.com.cwi.reset.hugocabral.model;
 
 
 import java.time.LocalDate;

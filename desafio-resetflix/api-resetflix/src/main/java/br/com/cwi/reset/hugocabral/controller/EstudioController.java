@@ -1,7 +1,7 @@
 package br.com.cwi.reset.hugocabral.controller;
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.Estudio;
+import br.com.cwi.reset.hugocabral.model.Estudio;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
 import br.com.cwi.reset.hugocabral.service.EstudioService;
 
@@ -14,6 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/estudios")
 public class EstudioController {
+
     private EstudioService estudioService;
 
     public EstudioController() {

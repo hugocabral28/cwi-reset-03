@@ -2,14 +2,15 @@ package br.com.cwi.reset.hugocabral.service;
 
 
 import br.com.cwi.reset.hugocabral.FakeDatabase;
-import br.com.cwi.reset.hugocabral.domain.Ator;
-import br.com.cwi.reset.hugocabral.domain.AtorEmAtividade;
-import br.com.cwi.reset.hugocabral.domain.Constantes;
-import br.com.cwi.reset.hugocabral.domain.StatusCarreira;
+import br.com.cwi.reset.hugocabral.model.Ator;
+import br.com.cwi.reset.hugocabral.response.AtorEmAtividade;
+import br.com.cwi.reset.hugocabral.validator.Constantes;
+import br.com.cwi.reset.hugocabral.model.StatusCarreira;
 import br.com.cwi.reset.hugocabral.exception.*;
+import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.request.AtorRequest;
+import br.com.cwi.reset.hugocabral.validator.BasicInfoRequiredValidator;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -19,23 +20,35 @@ public class AtorService {
 
     private FakeDatabase fakeDatabase;
     private Integer sequenceIdAtor = 0;
+    private BasicInfoRequiredValidator validator;
 
     public AtorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+        this.validator = new BasicInfoRequiredValidator();
     }
 
-    public void criarAtor(AtorRequest atorRequest) throws CampoObrigatorioException,
-            NomeESobrenomeException, DataDeNascimentoInvalidaException,
-            AnoInicioAtividadeInvalidoException, CadastroDuplicadoException {
+    public void criarAtor(AtorRequest atorRequest) throws Exception {
 
-        validaCamposObrigatorios(atorRequest);
-        validaNomeESobrenome(atorRequest);
-        validaDataNascimento(atorRequest);
-        validaAnoInicioAtividade(atorRequest);
-        validaDuplicidadeCadastro(atorRequest);
+        /* ### Validações ### */
+        validator.validaCamposObrigatorios(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getAnoInicioAtividade(), TipoDominioException.ATOR);
+        validator.validaDataNascimento(atorRequest.getDataNascimento(), TipoDominioException.ATOR);
+        validator.validaNomeESobrenome(atorRequest.getNome(), TipoDominioException.ATOR);
+        validator.validaAnoInicioAtividade(atorRequest.getDataNascimento(), atorRequest.getAnoInicioAtividade(), TipoDominioException.ATOR);
 
+        if (atorRequest.getStatusCarreira() == null) {
+            throw new CampoObrigatorioException(Constantes.CAMPO_STATUS_CARREIRA);
+        }
+
+        final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
+
+        for (Ator atorCadastrado : atoresCadastrados) {
+            if (atorCadastrado.getNome().equalsIgnoreCase(atorRequest.getNome())) {
+                throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), atorRequest.getNome());
+            }
+        }
+
+        /* ### Cadastrando ### */
         sequenceIdAtor = gerarIdAtor();
-
         final Ator ator = new Ator(sequenceIdAtor, atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
         fakeDatabase.persisteAtor(ator);
 
@@ -109,64 +122,5 @@ public class AtorService {
 
     private Integer gerarIdAtor() {
         return ++sequenceIdAtor;
-    }
-
-    private void validaCamposObrigatorios(AtorRequest atorRequest) throws CampoObrigatorioException {
-
-        String nome = atorRequest.getNome();
-        if (nome == null || nome.equals("")) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_NOME);
-        }
-
-        LocalDate dataNascimento = atorRequest.getDataNascimento();
-        if (dataNascimento == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_DATA_NASCIMENTO);
-        }
-
-        Integer anoInicioAtividade = atorRequest.getAnoInicioAtividade();
-        if (anoInicioAtividade == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_ANO_INICIO_ATIVIDADE);
-        }
-
-        StatusCarreira statusCarreira = atorRequest.getStatusCarreira();
-        if (statusCarreira == null) {
-            throw new CampoObrigatorioException(Constantes.CAMPO_STATUS_CARREIRA);
-        }
-
-    }
-
-    private void validaNomeESobrenome(AtorRequest atorRequest) throws NomeESobrenomeException {
-        String[] nomeSobrenome = atorRequest.getNome().split(" ");
-        if (nomeSobrenome.length < 2) {
-            throw new NomeESobrenomeException(TipoDominioException.ATOR.getSingular());
-        }
-    }
-
-    private void validaDataNascimento(AtorRequest atorRequest) throws DataDeNascimentoInvalidaException {
-        Integer anoAtual = LocalDate.now().getYear();
-        Integer anoNascimento = atorRequest.getDataNascimento().getYear();
-
-        if (anoNascimento > anoAtual) {
-            throw new DataDeNascimentoInvalidaException(TipoDominioException.ATOR.getSingular());
-        }
-    }
-
-    private void validaAnoInicioAtividade(AtorRequest atorRequest) throws AnoInicioAtividadeInvalidoException {
-        Integer anoNascimento = atorRequest.getDataNascimento().getYear();
-        Integer anoInicioAtividade = atorRequest.getAnoInicioAtividade();
-
-        if (anoInicioAtividade < anoNascimento) {
-            throw new AnoInicioAtividadeInvalidoException(TipoDominioException.ATOR.getSingular());
-        }
-    }
-
-    private void validaDuplicidadeCadastro(AtorRequest atorRequest) throws CadastroDuplicadoException {
-        String nomeDoAtor = atorRequest.getNome();
-        List<Ator> atores = fakeDatabase.recuperaAtores();
-        for (Ator ator : atores) {
-            if (ator.getNome().toLowerCase(Locale.ROOT).equals(nomeDoAtor.toLowerCase(Locale.ROOT))) {
-                throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), nomeDoAtor);
-            }
-        }
     }
 }
