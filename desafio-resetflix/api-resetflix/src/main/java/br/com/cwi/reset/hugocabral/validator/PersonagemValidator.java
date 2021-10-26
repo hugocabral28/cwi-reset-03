@@ -2,7 +2,7 @@ package br.com.cwi.reset.hugocabral.validator;
 
 import br.com.cwi.reset.hugocabral.exception.NaoPermitidoInformarException;
 import br.com.cwi.reset.hugocabral.exception.TipoDominioException;
-import br.com.cwi.reset.hugocabral.exception.comum.CampoObrigatorioException;
+import br.com.cwi.reset.hugocabral.exception.CampoObrigatorioException;
 import br.com.cwi.reset.hugocabral.request.PersonagemRequest;
 
 import java.util.HashSet;

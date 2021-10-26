@@ -1,10 +1,10 @@
 package br.com.cwi.reset.hugocabral.service;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
+import br.com.cwi.reset.hugocabral.exception.ConsultaIdException;
 import br.com.cwi.reset.hugocabral.model.*;
 import br.com.cwi.reset.hugocabral.exception.*;
-import br.com.cwi.reset.hugocabral.exception.comum.CadastroDuplicadoException;
-import br.com.cwi.reset.hugocabral.exception.comum.SemCadastroException;
+import br.com.cwi.reset.hugocabral.exception.CadastroDuplicadoException;
+import br.com.cwi.reset.hugocabral.exception.SemCadastroException;
 import br.com.cwi.reset.hugocabral.repository.FilmeRepository;
 import br.com.cwi.reset.hugocabral.request.FilmeRequest;
 import br.com.cwi.reset.hugocabral.validator.FilmeValidator;
@@ -67,6 +67,22 @@ public class FilmeService {
         filmeRepository.save(filme);
     }
 
+    public void removerFilme(Integer id) throws Exception {
+
+        boolean temFilme = filmeRepository.existsById(id);
+        if(!temFilme){
+            throw new ConsultaIdException(TipoDominioException.DIRETOR.getSingular(),id);
+        }
+
+        Filme filme = filmeRepository.findAllById(id);
+
+        List<PersonagemAtor> listPersonagem = filme.getPersonagens();
+
+        personagemAtorService.removerPersonagem(listPersonagem);
+
+        filmeRepository.delete(filme);
+    }
+
     public List<Filme> consultarFilmes(
             Optional<String> nomeFilme,
             Optional<String> nomeDiretor,
@@ -106,6 +122,10 @@ public class FilmeService {
 
         return filtroFinal;
     }
+
+//    public boolean consultarDiretorFilme(Integer id) throws Exception{
+//        return filmeRepository.findById_diretor(id);
+//    }
 
     private List<Filme> filtrarNomeFilme(final List<Filme> listaOriginal, final String nome) {
         if (isNull(nome)) {

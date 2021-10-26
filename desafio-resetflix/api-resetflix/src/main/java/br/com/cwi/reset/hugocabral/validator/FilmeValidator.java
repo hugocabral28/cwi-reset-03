@@ -1,7 +1,7 @@
 package br.com.cwi.reset.hugocabral.validator;
 
 import br.com.cwi.reset.hugocabral.model.Genero;
-import br.com.cwi.reset.hugocabral.exception.comum.CampoObrigatorioException;
+import br.com.cwi.reset.hugocabral.exception.CampoObrigatorioException;
 import br.com.cwi.reset.hugocabral.request.FilmeRequest;
 
 import java.util.List;

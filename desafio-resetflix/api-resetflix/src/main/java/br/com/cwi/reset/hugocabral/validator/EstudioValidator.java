@@ -1,8 +1,8 @@
 package br.com.cwi.reset.hugocabral.validator;
 
 import br.com.cwi.reset.hugocabral.exception.TipoDominioException;
-import br.com.cwi.reset.hugocabral.exception.comum.CampoObrigatorioException;
-import br.com.cwi.reset.hugocabral.exception.comum.DataFuturaException;
+import br.com.cwi.reset.hugocabral.exception.CampoObrigatorioException;
+import br.com.cwi.reset.hugocabral.exception.DataFuturaException;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
 
 import java.time.LocalDate;

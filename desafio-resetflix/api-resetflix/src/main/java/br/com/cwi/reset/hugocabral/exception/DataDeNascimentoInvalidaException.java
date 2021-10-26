@@ -1,4 +1,4 @@
-package br.com.cwi.reset.hugocabral.exception.comum;
+package br.com.cwi.reset.hugocabral.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

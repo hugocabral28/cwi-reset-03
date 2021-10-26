@@ -1,9 +1,7 @@
 package br.com.cwi.reset.hugocabral.service;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.*;
 import br.com.cwi.reset.hugocabral.exception.*;
-import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.repository.EstudioRepository;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
 import br.com.cwi.reset.hugocabral.validator.EstudioValidator;

@@ -1,6 +1,5 @@
 package br.com.cwi.reset.hugocabral.controller;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.Diretor;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
 import br.com.cwi.reset.hugocabral.service.DiretorService;
@@ -34,4 +33,13 @@ public class DiretorController {
         return this.diretorService.consultarDiretor(id);
     }
 
+    @PutMapping("/{id}")
+    public void atualizarDiretor(@PathVariable Integer id, @RequestBody DiretorRequest diretorRequest) throws Exception{
+        this.diretorService.atualizarDiretor(id,diretorRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public void removerDiretores(@PathVariable Integer id) throws Exception{
+        this.diretorService.removerDiretores(id);
+    }
 }

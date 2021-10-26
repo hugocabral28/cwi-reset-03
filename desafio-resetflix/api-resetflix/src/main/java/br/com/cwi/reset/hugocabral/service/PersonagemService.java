@@ -57,5 +57,8 @@ public class PersonagemService {
         return personagemRepository.findAll();
     }
 
+    public void removerPersonagem(final List<PersonagemAtor> personagens) throws Exception {
+        this.personagemRepository.deleteAll(personagens);
+    }
 
 }

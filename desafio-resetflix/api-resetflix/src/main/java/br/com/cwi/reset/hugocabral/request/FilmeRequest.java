@@ -3,16 +3,26 @@ package br.com.cwi.reset.hugocabral.request;
 
 import br.com.cwi.reset.hugocabral.model.Genero;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class FilmeRequest {
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo nome.")
     private String nome;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo anoLancamento.")
     private Integer anoLancamento;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo capaFilme.")
     private String capaFilme;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo generos.")
     private List<Genero> generos;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo idDiretor.")
     private Integer idDiretor;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo idEstudio.")
     private Integer idEstudio;
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo resumo.")
     private String resumo;
+    @Valid
     private List<PersonagemRequest> personagens;
 
     public FilmeRequest(String nome,

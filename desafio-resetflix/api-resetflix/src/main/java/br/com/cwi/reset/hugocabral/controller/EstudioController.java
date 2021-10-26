@@ -1,6 +1,5 @@
 package br.com.cwi.reset.hugocabral.controller;
 
-import br.com.cwi.reset.hugocabral.FakeDatabase;
 import br.com.cwi.reset.hugocabral.model.Estudio;
 import br.com.cwi.reset.hugocabral.request.EstudioRequest;
 import br.com.cwi.reset.hugocabral.service.EstudioService;

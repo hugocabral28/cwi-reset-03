@@ -2,12 +2,13 @@ package br.com.cwi.reset.hugocabral.service;
 
 import br.com.cwi.reset.hugocabral.model.Diretor;
 import br.com.cwi.reset.hugocabral.exception.*;
-import br.com.cwi.reset.hugocabral.exception.comum.*;
 import br.com.cwi.reset.hugocabral.repository.DiretorRepository;
 import br.com.cwi.reset.hugocabral.request.DiretorRequest;
 import br.com.cwi.reset.hugocabral.validator.BasicInfoRequiredValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class DiretorService {
 
     @Autowired
     private DiretorRepository repository;
+
     private BasicInfoRequiredValidator validator;
 
     public DiretorService() {
@@ -32,13 +34,7 @@ public class DiretorService {
         validator.validaDataNascimento(diretorRequest.getDataNascimento(), TipoDominioException.DIRETOR);
         validator.validaNomeESobrenome(diretorRequest.getNome(), TipoDominioException.DIRETOR);
         validator.validaAnoInicioAtividade(diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade(), TipoDominioException.DIRETOR);
-
-        final List<Diretor> diretoresCadastrados = repository.findAll();
-        for (Diretor diretorCadastrado : diretoresCadastrados) {
-            if (diretorCadastrado.getNome().equalsIgnoreCase(diretorRequest.getNome())) {
-                throw new CadastroDuplicadoException(TipoDominioException.DIRETOR.getSingular(), diretorRequest.getNome());
-            }
-        }
+        validaDuplicidadeCadastro(diretorRequest);
 
         /* ### Cadastrando ### */
         final Diretor diretor = new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
@@ -102,6 +98,55 @@ public class DiretorService {
             throw new SemCadastroException(TipoDominioException.DIRETOR.getSingular(), TipoDominioException.DIRETOR.getPlural());
         }
         return list;
+    }
+
+    public void atualizarDiretor(Integer id, DiretorRequest diretorRequest) throws Exception{
+        boolean temDiretor = repository.existsById(id);
+        if(temDiretor){
+            Diretor diretor = repository.findAllById(id);
+            validator.validaAnoInicioAtividade(diretorRequest.getDataNascimento(),diretorRequest.getAnoInicioAtividade(),TipoDominioException.DIRETOR);
+            validator.validaNomeESobrenome(diretorRequest.getNome(),TipoDominioException.DIRETOR);
+            validaDuplicidadeCadastro(diretorRequest);
+
+            diretor.setNome(diretorRequest.getNome());
+            diretor.setDataNascimento(diretorRequest.getDataNascimento());
+            diretor.setAnoInicioAtividade(diretorRequest.getAnoInicioAtividade());
+            repository.save(diretor);
+        }else{
+            throw new ConsultaIdException(TipoDominioException.DIRETOR.getSingular(),id);
+        }
+    }
+
+    public void removerDiretores(Integer id) throws Exception {
+        boolean temDiretores = repository.existsById(id);
+        if(!temDiretores){
+            throw new ConsultaIdException(TipoDominioException.DIRETOR.getSingular(),id);
+        }
+
+//        boolean diretorTemFilme = service.consultarDiretorFilme(id);
+//        if(diretorTemFilme){
+//            throw new Exception("Este diretor está vinculado a um ou mais filmes, para remover o diretor é necessário remover os seus filmes de participação.");
+//        }
+
+        Diretor diretor = repository.findAllById(id);
+        try {
+            repository.delete(diretor);
+        }catch (Exception e){
+            throw new VinculadoFilmeException("Este diretor está vinculado a um ou mais filmes, para remover o diretor é necessário remover os seus filmes de participação.");
+        }
+    }
+
+    private void validaDuplicidadeCadastro(DiretorRequest diretorRequests) throws CadastroDuplicadoException {
+        String nomeDoDiretor = diretorRequests.getNome();
+        List<Diretor> diretores = repository.findAll();
+
+        for (Diretor diretor : diretores) {
+            if (diretor.getNome().toLowerCase(Locale.ROOT).equals(nomeDoDiretor.toLowerCase(Locale.ROOT))) {
+                if(!repository.existsById(diretor.getId())){
+                    throw new CadastroDuplicadoException(TipoDominioException.DIRETOR.getSingular(), nomeDoDiretor);
+                }
+            }
+        }
     }
 
 

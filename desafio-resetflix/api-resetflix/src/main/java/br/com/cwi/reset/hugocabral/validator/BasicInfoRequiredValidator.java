@@ -1,10 +1,10 @@
 package br.com.cwi.reset.hugocabral.validator;
 
 import br.com.cwi.reset.hugocabral.exception.*;
-import br.com.cwi.reset.hugocabral.exception.comum.AnoInicioAtividadeInvalidoException;
-import br.com.cwi.reset.hugocabral.exception.comum.CampoObrigatorioException;
-import br.com.cwi.reset.hugocabral.exception.comum.DataDeNascimentoInvalidaException;
-import br.com.cwi.reset.hugocabral.exception.comum.NomeESobrenomeException;
+import br.com.cwi.reset.hugocabral.exception.AnoInicioAtividadeInvalidoException;
+import br.com.cwi.reset.hugocabral.exception.CampoObrigatorioException;
+import br.com.cwi.reset.hugocabral.exception.DataDeNascimentoInvalidaException;
+import br.com.cwi.reset.hugocabral.exception.NomeESobrenomeException;
 
 
 import java.time.LocalDate;
@@ -20,11 +20,11 @@ public class BasicInfoRequiredValidator {
             throw new CampoObrigatorioException(Constantes.CAMPO_NOME);
         }
 
-        if (dataNascimento == null) {
+        if (dataNascimento == null || dataNascimento.equals("")) {
             throw new CampoObrigatorioException(Constantes.CAMPO_DATA_NASCIMENTO);
         }
 
-        if (anoInicioAtividade == null) {
+        if (anoInicioAtividade == null || anoInicioAtividade.equals("")) {
             throw new CampoObrigatorioException(Constantes.CAMPO_ANO_INICIO_ATIVIDADE);
         }
     }
