@@ -2,14 +2,16 @@ package br.com.cwi.reset.hugocabral.request;
 
 import br.com.cwi.reset.hugocabral.model.TipoAtuacao;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class PersonagemRequest {
+    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo IdAtor.")
     private Integer idAtor;
-    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo nomePersonagem.")
+    @NotBlank(message = "Campo obrigatório não informado. Favor informar o campo nomePersonagem.")
     private String nomePersonagem;
-    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo descricaoPersonagem.")
+    @NotBlank(message = "Campo obrigatório não informado. Favor informar o campo descricaoPersonagem.")
     private String descricaoPersonagem;
     @NotNull(message = "Campo obrigatório não informado. Favor informar o campo tipoAtuacao.")
     private TipoAtuacao tipoAtuacao;

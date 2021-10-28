@@ -21,7 +21,7 @@ import java.util.Optional;
 public class AtorService {
 
     @Autowired
-    private AtorRepository repository;
+    private AtorRepository atorRepository;
 
     private BasicInfoRequiredValidator validator;
 
@@ -44,15 +44,20 @@ public class AtorService {
 
         /* ### Cadastrando ### */
         final Ator ator = new Ator(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getStatusCarreira(), atorRequest.getAnoInicioAtividade());
-        repository.save(ator);
+        atorRepository.save(ator);
 
     }
 
     // Demais métodos da classe
     public List<AtorEmAtividade> listarAtoresEmAtividade(Optional<String> filtroNome) throws Exception {
-        final List<Ator> atoresCadastrados = repository.findAll();
+        final List<Ator> atoresCadastrados = atorRepository.findAll();
 
         if (atoresCadastrados.isEmpty()) {
+            throw new SemCadastroException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
+        }
+        //Verificando sem tem Ator em atividade
+        List<AtorEmAtividade> listarAtoresEmAtividade = atorRepository.findByStatusCarreira(StatusCarreira.EM_ATIVIDADE);
+        if(listarAtoresEmAtividade.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
         }
 
@@ -60,7 +65,6 @@ public class AtorService {
 
         if (filtroNome.isPresent()) {
             for (Ator ator : atoresCadastrados) {
-                //Verificando se o filtroNome informado contem no nome
                 final boolean containsFilter = atoresCadastrados.stream()
                         .allMatch(atorlistadoFilter -> ator.getNome()
                                 .toLowerCase(Locale.ROOT)
@@ -94,7 +98,7 @@ public class AtorService {
             throw new CampoObrigatorioException(Constantes.CAMPO_ID);
         }
 
-        final List<Ator> atores = repository.findAll();
+        final List<Ator> atores = atorRepository.findAll();
 
         for (Ator ator : atores) {
             if (id.equals(ator.getId())) {
@@ -107,7 +111,7 @@ public class AtorService {
     }
 
     public List<Ator> consultarAtores() throws SemCadastroException {
-        List<Ator> list = repository.findAll();
+        List<Ator> list = atorRepository.findAll();
         if (list.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
         }
@@ -115,51 +119,55 @@ public class AtorService {
     }
 
     public void atualizarAtor(Integer id, AtorRequest atorRequest) throws Exception {
-        boolean temAtor = repository.existsById(id);
-        if(temAtor){
-            Ator ator = repository.findAllById(id);
-            validator.validaAnoInicioAtividade(atorRequest.getDataNascimento(),atorRequest.getAnoInicioAtividade(),TipoDominioException.ATOR);
-            validator.validaNomeESobrenome(atorRequest.getNome(),TipoDominioException.ATOR);
-            validaDuplicidadeCadastro(atorRequest);
+        boolean temAtor = atorRepository.existsById(id);
+        if (temAtor) {
+            validator.validaAnoInicioAtividade(atorRequest.getDataNascimento(), atorRequest.getAnoInicioAtividade(), TipoDominioException.ATOR);
+            validator.validaNomeESobrenome(atorRequest.getNome(), TipoDominioException.ATOR);
 
+            //Verificando se já consta Nome do Ator cadastrado no Banco de Dado
+            Ator nomeAtorExist = atorRepository.findByNomeEqualsIgnoreCase(atorRequest.getNome());
+            if (nomeAtorExist != null && !nomeAtorExist.getId().equals(id)) {
+                throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), atorRequest.getNome());
+            }
+
+            Ator ator = atorRepository.findAllById(id);
             ator.setNome(atorRequest.getNome());
             ator.setDataNascimento(atorRequest.getDataNascimento());
             ator.setStatusCarreira(atorRequest.getStatusCarreira());
             ator.setAnoInicioAtividade(atorRequest.getAnoInicioAtividade());
-            repository.save(ator);
-        }else{
-            throw new ConsultaIdException(TipoDominioException.ATOR.getSingular(),id);
+
+            atorRepository.save(ator);
+
+        } else {
+            throw new ConsultaIdException(TipoDominioException.ATOR.getSingular(), id);
         }
     }
 
     public void removerAtor(Integer id) throws Exception {
-        boolean temAtor = repository.existsById(id);
-        if(!temAtor){
-            throw new ConsultaIdException(TipoDominioException.ATOR.getSingular(),id);
+        boolean temAtor = atorRepository.existsById(id);
+        if (!temAtor) {
+            throw new ConsultaIdException(TipoDominioException.ATOR.getSingular(), id);
         }
 
-        Ator ator = repository.findAllById(id);
+        Ator ator = atorRepository.findAllById(id);
         try {
-            repository.delete(ator);
-        }catch (Exception e) {
+            atorRepository.delete(ator);
+        } catch (Exception e) {
             throw new VinculadoFilmeException("Este ator está vinculado a um ou mais personagens, para remover o ator é necessário remover os seus personagens de atuação.");
         }
     }
 
     private void validaDuplicidadeCadastro(AtorRequest atorRequests) throws CadastroDuplicadoException {
         String nomeDoAtor = atorRequests.getNome();
-        List<Ator> atores = repository.findAll();
+        List<Ator> atores = atorRepository.findAll();
 
         for (Ator ator : atores) {
             if (ator.getNome().toLowerCase(Locale.ROOT).equals(nomeDoAtor.toLowerCase(Locale.ROOT))) {
-                if(!repository.existsById(ator.getId())){
-                    throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), nomeDoAtor);
-                }
+                throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), nomeDoAtor);
             }
         }
 
     }
-
 
 
 }

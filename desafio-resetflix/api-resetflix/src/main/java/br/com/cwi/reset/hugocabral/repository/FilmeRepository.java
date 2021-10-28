@@ -14,6 +14,5 @@ public interface FilmeRepository extends CrudRepository<Filme, Integer> {
 
     Filme findAllById(Integer id);
 
-//    Filme findById_diretorIs(Integer id);
 
 }

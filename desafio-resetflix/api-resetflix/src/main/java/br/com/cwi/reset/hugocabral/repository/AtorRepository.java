@@ -1,6 +1,8 @@
 package br.com.cwi.reset.hugocabral.repository;
 
 import br.com.cwi.reset.hugocabral.model.Ator;
+import br.com.cwi.reset.hugocabral.model.StatusCarreira;
+import br.com.cwi.reset.hugocabral.response.AtorEmAtividade;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +17,8 @@ public interface AtorRepository extends CrudRepository<Ator, Integer> {
     List<Ator> findAll();
 
     Ator findAllById(Integer id);
+
+    Ator findByNomeEqualsIgnoreCase(String nome);
+
+    List<AtorEmAtividade> findByStatusCarreira(StatusCarreira statusCarreira);
 }

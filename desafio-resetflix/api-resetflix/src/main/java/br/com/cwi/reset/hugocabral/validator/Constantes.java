@@ -24,5 +24,4 @@ public abstract class Constantes {
     public final static String CAMPO_DESCRICAO_PERSONAGEM = "Descrição do Personagem";
 
 
-
 }

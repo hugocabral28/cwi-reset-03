@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface EstudioRepository extends CrudRepository<Estudio, Integer> {
     Estudio findByNome(String nome);
+
     List<Estudio> findAll();
 }

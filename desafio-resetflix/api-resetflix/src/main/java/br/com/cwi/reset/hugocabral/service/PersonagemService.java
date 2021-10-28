@@ -27,10 +27,13 @@ public class PersonagemService {
     public List<PersonagemAtor> cadastrarPersonagensFilme(final List<PersonagemRequest> personagens) throws Exception {
         validator.validarPersonagensAtoresFilme(personagens);
 
+
         final List<PersonagemAtor> personagensAtores = new ArrayList<>();
 
         for (PersonagemRequest request : personagens) {
+
             personagensAtores.add(criarPersonagem(request));
+
         }
 
         return personagensAtores;

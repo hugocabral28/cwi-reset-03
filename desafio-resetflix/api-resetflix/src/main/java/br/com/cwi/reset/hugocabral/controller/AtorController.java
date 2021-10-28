@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public class AtorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarAtor(@RequestBody AtorRequest atorRequest) throws Exception {
+    public void criarAtor(@RequestBody @Valid AtorRequest atorRequest) throws Exception {
         this.atorService.criarAtor(atorRequest);
     }
 
@@ -31,22 +32,22 @@ public class AtorController {
     }
 
     @GetMapping("/{id}")
-    public Ator consultarAtor(@PathVariable Integer id) throws Exception {
+    public Ator consultarAtor(@PathVariable @Valid Integer id) throws Exception {
         return this.atorService.consultarAtor(id);
     }
 
     @GetMapping
-    public List<Ator> consultarAtores(AtorRequest atorRequest) throws Exception {
+    public List<Ator> consultarAtores() throws Exception {
         return this.atorService.consultarAtores();
     }
 
     @PutMapping("/{id}")
-    public void atualizarAtor(@PathVariable Integer id, @RequestBody AtorRequest atorRequest) throws Exception {
-        this.atorService.atualizarAtor(id,atorRequest);
+    public void atualizarAtor(@PathVariable @Valid Integer id, @RequestBody @Valid AtorRequest atorRequest) throws Exception {
+        this.atorService.atualizarAtor(id, atorRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void removerAtor(@PathVariable Integer id) throws Exception{
+    public void removerAtor(@PathVariable @Valid Integer id) throws Exception {
         this.atorService.removerAtor(id);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class EstudioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarEstudio(@RequestBody EstudioRequest estudioRequest) throws Exception {
+    public void criarEstudio(@RequestBody @Valid EstudioRequest estudioRequest) throws Exception {
         this.estudioService.criarEstudio(estudioRequest);
     }
 
@@ -30,7 +31,7 @@ public class EstudioController {
     }
 
     @GetMapping("/{id}")
-    public Estudio consultarEstudios(@PathVariable Integer id) throws Exception {
+    public Estudio consultarEstudios(@PathVariable @Valid Integer id) throws Exception {
         return this.estudioService.consultarEstudio(id);
     }
 

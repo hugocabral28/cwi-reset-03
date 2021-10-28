@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class DiretorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarDiretor(@RequestBody DiretorRequest diretorRequest) throws Exception {
+    public void cadastrarDiretor(@RequestBody @Valid DiretorRequest diretorRequest) throws Exception {
         this.diretorService.cadastrarDiretor(diretorRequest);
     }
 
@@ -29,17 +30,17 @@ public class DiretorController {
     }
 
     @GetMapping("/{id}")
-    public Diretor consultarDiretor(@PathVariable Integer id) throws Exception {
+    public Diretor consultarDiretor(@PathVariable @Valid Integer id) throws Exception {
         return this.diretorService.consultarDiretor(id);
     }
 
     @PutMapping("/{id}")
-    public void atualizarDiretor(@PathVariable Integer id, @RequestBody DiretorRequest diretorRequest) throws Exception{
-        this.diretorService.atualizarDiretor(id,diretorRequest);
+    public void atualizarDiretor(@PathVariable @Valid Integer id, @RequestBody @Valid DiretorRequest diretorRequest) throws Exception {
+        this.diretorService.atualizarDiretor(id, diretorRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void removerDiretores(@PathVariable Integer id) throws Exception{
+    public void removerDiretores(@PathVariable @Valid Integer id) throws Exception {
         this.diretorService.removerDiretores(id);
     }
 }

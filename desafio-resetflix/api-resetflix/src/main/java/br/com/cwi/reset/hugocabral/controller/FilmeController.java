@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -20,20 +20,21 @@ public class FilmeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarEstudio(@RequestBody FilmeRequest filmeRequest) throws Exception {
+    public void criarEstudio(@RequestBody @Valid FilmeRequest filmeRequest) throws Exception {
         this.filmeService.criarFilme(filmeRequest);
     }
+
     @GetMapping
     public List<Filme> consultarFilmes(
-            @RequestParam Optional<String> nomeFilme,
-            @RequestParam Optional<String> nomeDiretor,
-            @RequestParam Optional<String> nomePersonagem,
-            @RequestParam Optional<String> nomeAtor) throws Exception {
+            @RequestParam String nomeFilme,
+            @RequestParam String nomeDiretor,
+            @RequestParam String nomePersonagem,
+            @RequestParam String nomeAtor) throws Exception {
         return filmeService.consultarFilmes(nomeFilme, nomeDiretor, nomePersonagem, nomeAtor);
     }
 
     @DeleteMapping("/{id}")
-    public void removerFilme(@PathVariable Integer id) throws Exception {
+    public void removerFilme(@PathVariable @Valid Integer id) throws Exception {
         this.filmeService.removerFilme(id);
     }
 

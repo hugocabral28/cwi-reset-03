@@ -2,13 +2,14 @@ package br.com.cwi.reset.hugocabral.request;
 
 import br.com.cwi.reset.hugocabral.model.StatusAtividade;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class EstudioRequest {
-    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo nome.")
+    @NotBlank(message = "Campo obrigatório não informado. Favor informar o campo nome.")
     private String nome;
-    @NotNull(message = "Campo obrigatório não informado. Favor informar o campo descricao.")
+    @NotBlank(message = "Campo obrigatório não informado. Favor informar o campo descricao.")
     private String descricao;
     @NotNull(message = "Campo obrigatório não informado. Favor informar o campo dataCriacao.")
     private LocalDate dataCriacao;

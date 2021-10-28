@@ -22,7 +22,7 @@ public class Filme {
     @JoinColumn(name = "id_estudio")
     private Estudio estudio;
     @OneToMany
-    @JoinColumn(name = "id_personagem_ator")
+    @JoinColumn(name = "id_filme")
     private List<PersonagemAtor> personagens;
     private String resumo;
 

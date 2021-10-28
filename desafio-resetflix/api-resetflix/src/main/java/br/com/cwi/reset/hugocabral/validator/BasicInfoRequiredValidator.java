@@ -12,9 +12,9 @@ import java.time.LocalDate;
 
 public class BasicInfoRequiredValidator {
     public void validaCamposObrigatorios(final String nome,
-                       final LocalDate dataNascimento,
-                       final Integer anoInicioAtividade,
-                       final TipoDominioException tipoDominioException) throws Exception {
+                                         final LocalDate dataNascimento,
+                                         final Integer anoInicioAtividade,
+                                         final TipoDominioException tipoDominioException) throws Exception {
 
         if (nome == null || nome.equals("")) {
             throw new CampoObrigatorioException(Constantes.CAMPO_NOME);
@@ -29,13 +29,13 @@ public class BasicInfoRequiredValidator {
         }
     }
 
-    public void validaNomeESobrenome(final String nomeSobrenome,final TipoDominioException tipoDominioException) throws NomeESobrenomeException {
-        if (nomeSobrenome.split(" ").length < 2) {
+    public void validaNomeESobrenome(final String nomeSobrenome, final TipoDominioException tipoDominioException) throws NomeESobrenomeException {
+        if (nomeSobrenome.trim().split(" ").length < 2) {
             throw new NomeESobrenomeException(tipoDominioException.getSingular());
         }
     }
 
-    public void validaDataNascimento(final LocalDate dataNascimento,final TipoDominioException tipoDominioException) throws DataDeNascimentoInvalidaException {
+    public void validaDataNascimento(final LocalDate dataNascimento, final TipoDominioException tipoDominioException) throws DataDeNascimentoInvalidaException {
         Integer anoAtual = LocalDate.now().getYear();
         Integer anoNascimento = dataNascimento.getYear();
 

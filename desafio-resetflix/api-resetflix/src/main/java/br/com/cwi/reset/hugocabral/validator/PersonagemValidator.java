@@ -30,6 +30,7 @@ public class PersonagemValidator {
             throw new CampoObrigatorioException(Constantes.CAMPO_TIPO_ATUACAO);
         }
     }
+
     public void validarPersonagensAtoresFilme(final List<PersonagemRequest> personagens) throws Exception {
 
         final Set<PersonagemRequest> personagemRequestSet = new HashSet<>();

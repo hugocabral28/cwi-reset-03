@@ -17,7 +17,7 @@ import java.util.Optional;
 public class EstudioService {
 
     @Autowired
-    private EstudioRepository repository;
+    private EstudioRepository estudioRepository;
     private EstudioValidator validator;
 
     public EstudioService() {
@@ -32,11 +32,11 @@ public class EstudioService {
 
         /* ### Cadastrando ### */
         final Estudio estudio = new Estudio(estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
-        repository.save(estudio);
+        estudioRepository.save(estudio);
     }
 
     public List<Estudio> consultarEstudios(Optional<String> filtroNome) throws Exception {
-        final List<Estudio> estudiosCadastrados = repository.findAll();
+        final List<Estudio> estudiosCadastrados = estudioRepository.findAll();
 
         if (estudiosCadastrados.isEmpty()) {
             throw new SemCadastroException(TipoDominioException.ESTUDIO.getSingular(), TipoDominioException.ESTUDIO.getPlural());
@@ -73,7 +73,7 @@ public class EstudioService {
             throw new ConsultaIdException(TipoDominioException.ESTUDIO.getSingular(), id);
         }
 
-        final List<Estudio> estudios = repository.findAll();
+        final List<Estudio> estudios = estudioRepository.findAll();
 
         for (Estudio estudio : estudios) {
             if (id.equals(estudio.getId())) {
@@ -87,7 +87,7 @@ public class EstudioService {
 
     private void validaDuplicidadeCadastro(EstudioRequest estudioRequest) throws CadastroDuplicadoException {
         String nomeDoEstudio = estudioRequest.getNome();
-        List<Estudio> estudios = repository.findAll();
+        List<Estudio> estudios = estudioRepository.findAll();
         for (Estudio estudio : estudios) {
             if (estudio.getNome().toLowerCase(Locale.ROOT).equals(nomeDoEstudio.toLowerCase(Locale.ROOT))) {
                 throw new CadastroDuplicadoException(TipoDominioException.ESTUDIO.getSingular(), nomeDoEstudio);

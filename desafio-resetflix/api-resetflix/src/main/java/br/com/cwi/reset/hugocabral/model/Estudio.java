@@ -18,7 +18,7 @@ public class Estudio {
     public Estudio() {
     }
 
-    public Estudio( String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
+    public Estudio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
