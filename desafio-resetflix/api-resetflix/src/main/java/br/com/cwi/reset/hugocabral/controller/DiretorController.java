@@ -25,7 +25,7 @@ public class DiretorController {
     }
 
     @GetMapping
-    public List<Diretor> listarDiretores(@RequestParam Optional<String> filtroNome) throws Exception {
+    public List<Diretor> listarDiretores(@RequestParam(required = false) String filtroNome) throws Exception {
         return this.diretorService.listarDiretores(filtroNome);
     }
 
