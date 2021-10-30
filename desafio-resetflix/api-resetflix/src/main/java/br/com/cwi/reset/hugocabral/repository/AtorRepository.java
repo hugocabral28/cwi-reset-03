@@ -16,6 +16,8 @@ public interface AtorRepository extends CrudRepository<Ator, Integer> {
 
     List<Ator> findAll();
 
+    List<Ator> findByNomeContainingIgnoreCase(String nome);
+
     Ator findAllById(Integer id);
 
     Ator findByNomeEqualsIgnoreCase(String nome);
