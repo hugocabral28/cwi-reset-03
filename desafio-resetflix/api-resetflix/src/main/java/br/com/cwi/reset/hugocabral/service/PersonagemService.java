@@ -56,6 +56,7 @@ public class PersonagemService {
 
         return personagemAtor;
     }
+
     public List<PersonagemAtor> consultarPersonagemAtor(String nome) throws Exception {
         return personagemRepository.findAll();
     }
@@ -64,4 +65,11 @@ public class PersonagemService {
         this.personagemRepository.deleteAll(personagens);
     }
 
+    public List<PersonagemAtor> consultarPersonagemAtorPorNomeEAtor(String nomePersonagem, String nomeAtor) {
+        List<Ator> atores = atorService.consultarAtoresPorNome(nomeAtor);
+        if (nomePersonagem == null) {
+            return personagemRepository.findAllByAtorIn(atores);
+        }
+        return personagemRepository.findAllByNomePersonagemContainingIgnoreCaseAndAtorIn(nomePersonagem, atores);
+    }
 }

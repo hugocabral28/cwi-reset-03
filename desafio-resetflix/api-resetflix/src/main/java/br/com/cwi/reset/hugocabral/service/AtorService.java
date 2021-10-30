@@ -170,4 +170,11 @@ public class AtorService {
     }
 
 
+    public List<Ator> consultarAtoresPorNome(String nomeAtor) {
+        if(nomeAtor == null){
+            return atorRepository.findAll();
+        }
+
+        return atorRepository.findByNomeContainingIgnoreCase(nomeAtor);
+    }
 }

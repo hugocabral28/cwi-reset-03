@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -91,19 +92,26 @@ public class FilmeService {
             String nomePersonagem,
             String nomeAtor) throws Exception {
 
-        final List<Filme> filmesCadastrados = filmeRepository.findAll();
-
-        if (filmesCadastrados.isEmpty()) {
+        if (!filmeRepository.existsBy()) {
             throw new SemCadastroException(TipoDominioException.FILME.getSingular(), TipoDominioException.FILME.getPlural());
         }
+        //caso não tenha nenhum filtro retorna todos filmes
+        if (isNull(nomeFilme) && isNull(nomeDiretor) && isNull(nomePersonagem) && isNull(nomeAtor)) {
+            return filmeRepository.findAll();
+        }
 
-        final List<Filme> filtrarNomePersonagem = filtrarNomePersonagem(filmesCadastrados, nomePersonagem);
-        final List<Filme> filtrarNomeAtor = filtrarNomeAtor(filtrarNomePersonagem, nomeAtor);
-        final List<Filme> filtrarNomeDiretor = filtrarNomeDiretor(filtrarNomeAtor, nomeDiretor);
-        final List<Filme> filtroFinal = filtrarNomeFilme(filtrarNomeDiretor, nomeFilme);
+        final List<Diretor> diretores = diretorService.listarDiretores(nomeDiretor);
+        final List<PersonagemAtor> personagens = personagemAtorService.consultarPersonagemAtorPorNomeEAtor(nomePersonagem, nomeAtor);
 
+        List<Filme> filmes;
+        if (isNull(nomeFilme)) {
+            filmes = filmeRepository.findAllByDiretorInAndPersonagensIn(diretores, personagens);
+        } else {
+            filmes = filmeRepository.findAllByNomeContainingIgnoreCaseAndDiretorInAndPersonagensIn(nomeFilme, diretores, personagens);
+        }
 
-        if (filtroFinal.isEmpty()) {
+        //Se não tiver nenhum filme com os filtros
+        if (isNull(filmes) || filmes.isEmpty()) {
             throw new FiltroFilmesException(
                     TipoDominioException.FILME.getSingular(),
                     nomeFilme,
@@ -113,79 +121,15 @@ public class FilmeService {
             );
         }
 
-        return filtroFinal;
-    }
+        Set<Filme> filmeSet = new HashSet<>();
 
-    private List<Filme> filtrarNomeFilme(final List<Filme> listaOriginal, final String nome) {
-        if (isNull(nome)) {
-            return listaOriginal;
-        }
-
-        final List<Filme> filmeFiltrado = new ArrayList<>();
-
-        for (Filme filme : listaOriginal) {
-            if (filme.getNome().toLowerCase(Locale.ROOT).contains(nome.toLowerCase(Locale.ROOT))) {
-                filmeFiltrado.add(filme);
+        for (Filme filme : filmes) {
+            if (!filmeSet.contains(filme)) {
+                filmeSet.add(filme);
             }
         }
 
-        return filmeFiltrado;
-    }
-
-    private List<Filme> filtrarNomeDiretor(final List<Filme> listaOriginal, final String nome) {
-        if (isNull(nome)) {
-            return listaOriginal;
-        }
-
-        final List<Filme> filmeFiltrado = new ArrayList<>();
-
-        for (Filme filme : listaOriginal) {
-            if (filme.getDiretor().getNome().toLowerCase(Locale.ROOT).contains(nome.toLowerCase(Locale.ROOT))) {
-                filmeFiltrado.add(filme);
-            }
-        }
-
-        return filmeFiltrado;
-    }
-
-    private List<Filme> filtrarNomeAtor(final List<Filme> listaOriginal, final String nome) {
-        if (isNull(nome)) {
-            return listaOriginal;
-        }
-
-        final List<Filme> filmeFiltrado = new ArrayList<>();
-
-        for (Filme filme : listaOriginal) {
-            for (PersonagemAtor personagens : filme.getPersonagens()) {
-                if (personagens.getAtor().getNome().toLowerCase(Locale.ROOT).contains(nome.toLowerCase(Locale.ROOT))) {
-                    filmeFiltrado.add(filme);
-                    break;
-                }
-            }
-        }
-
-        return filmeFiltrado;
-    }
-
-    private List<Filme> filtrarNomePersonagem(final List<Filme> listaOriginal, final String nome) {
-        if (isNull(nome)) {
-            return listaOriginal;
-        }
-
-        final List<Filme> filmeFiltrado = new ArrayList<>();
-
-        for (Filme filme : listaOriginal) {
-            for (PersonagemAtor personagens : filme.getPersonagens()) {
-                if (personagens.getNomePersonagem()
-                        .toLowerCase(Locale.ROOT)
-                        .contains(nome.toLowerCase(Locale.ROOT))
-                ) {
-                    filmeFiltrado.add(filme);
-                    break;
-                }
-            }
-        }
-        return filmeFiltrado;
+        return filmeSet.stream().collect(Collectors.toList());
     }
 
     private void validaDuplicidadeCadastro(FilmeRequest filmeRequest) throws CadastroDuplicadoException {
@@ -197,6 +141,5 @@ public class FilmeService {
             }
         }
     }
-
 
 }

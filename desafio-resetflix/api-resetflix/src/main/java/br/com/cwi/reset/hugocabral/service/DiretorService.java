@@ -41,7 +41,7 @@ public class DiretorService {
     }
 
     // Demais métodos da classe
-    public List<Diretor> listarDiretores(Optional<String> filtroNome) throws Exception {
+    public List<Diretor> listarDiretores(final String filtroNome) throws Exception {
         final List<Diretor> diretoresCadastrados = diretorRepository.findAll();
 
         if (diretoresCadastrados.isEmpty()) {
@@ -50,13 +50,13 @@ public class DiretorService {
 
         final List<Diretor> retorno = new ArrayList<>();
 
-        if (filtroNome.isPresent()) {
+        if (filtroNome != null) {
             for (Diretor diretor : diretoresCadastrados) {
                 //Verificando se o filtroNome informado contem no nome
                 final boolean containsFilter = diretoresCadastrados.stream()
                         .allMatch(atorlistadoFilter -> diretor.getNome()
                                 .toLowerCase(Locale.ROOT)
-                                .contains(filtroNome.get().toLowerCase(Locale.ROOT)));
+                                .contains(filtroNome.toLowerCase(Locale.ROOT)));
 
                 if (containsFilter) {
                     retorno.add(diretor);
@@ -67,7 +67,7 @@ public class DiretorService {
         }
 
         if (retorno.isEmpty() && filtroNome != null) {
-            throw new FiltroNomeException(TipoDominioException.DIRETOR.getSingular(), filtroNome.get());
+            throw new FiltroNomeException(TipoDominioException.DIRETOR.getSingular(), filtroNome);
         }
 
         return retorno;
